@@ -19,21 +19,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // /product
         Uri productUri = ProductEntry.CONTENT_URI;
 
+        // Seed data
         ContentValues values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT, "Ice Cream");
         values.put(ProductEntry.COLUMN_PRICE, "2.00");
         values.put(ProductEntry.COLUMN_QTY, "5");
         values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Purity Ice Cream");
         values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "purity@icecream.com");
-
         getContentResolver().insert(productUri, values);
 
+        // Query all data
         Cursor products = getContentResolver().query(productUri, null, null, null, null);
 
+        // ListView
         productList = (ListView) findViewById(R.id.product_list);
-
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(
                 this
                 ,R.layout.product_card
@@ -41,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
                 ,new String[] { ProductEntry.COLUMN_PRODUCT, ProductEntry.COLUMN_PRICE, ProductEntry.COLUMN_QTY }
                 ,new int[] { R.id.product_name, R.id.price, R.id.qty }
         );
-
         productList.setAdapter(adapter);
 
     }
