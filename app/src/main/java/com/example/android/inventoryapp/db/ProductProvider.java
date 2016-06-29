@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 public class ProductProvider extends ContentProvider{
 
     public static final UriMatcher sUriMatcher = buildUriMatcher();
+    private ProductDbHelper mOpenHelper;
 
     static final int PRODUCT = 101;
 
@@ -28,7 +29,8 @@ public class ProductProvider extends ContentProvider{
 
     @Override
     public boolean onCreate() {
-        return false;
+        mOpenHelper = new ProductDbHelper(getContext());
+        return true;
     }
 
     @Nullable
