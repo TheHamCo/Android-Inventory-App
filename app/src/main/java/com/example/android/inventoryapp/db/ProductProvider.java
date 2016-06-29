@@ -14,8 +14,15 @@ public class ProductProvider extends ContentProvider{
 
     public static final UriMatcher sUriMatcher = buildUriMatcher();
 
+    static final int PRODUCT = 101;
+
     static UriMatcher buildUriMatcher(){
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+        final String authority = ProductContract.CONTENT_AUTHORITY;
+
+        // Match URI to code
+        matcher.addURI(authority, ProductContract.PATH_PRODUCT, PRODUCT);
+
         return matcher;
     }
 

@@ -18,6 +18,8 @@ public class ProductContract {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_PRODUCT).build();
 
+        //TODO: Add MIME types
+
         public static final String TABLE_NAME = "product";
 
         // Name of the product
