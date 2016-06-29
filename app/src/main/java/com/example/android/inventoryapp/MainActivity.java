@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-import com.example.android.inventoryapp.db.ProductContract;
 import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Uri productUri = ProductContract.BASE_CONTENT_URI;
+        Uri productUri = ProductEntry.CONTENT_URI;
 
         ContentValues values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT, "Ice Cream");
