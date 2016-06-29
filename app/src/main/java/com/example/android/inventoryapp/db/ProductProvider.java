@@ -33,17 +33,24 @@ public class ProductProvider extends ContentProvider{
         return true;
     }
 
+    @Override
+    public String getType(Uri uri) {
+        final int match = sUriMatcher.match(uri);
+
+        switch (match){
+            case PRODUCT:
+                return ProductContract.ProductEntry.CONTENT_TYPE;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+    }
+
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         return null;
     }
 
-    @Nullable
-    @Override
-    public String getType(Uri uri) {
-        return null;
-    }
 
     @Nullable
     @Override

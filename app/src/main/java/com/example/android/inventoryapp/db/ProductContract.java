@@ -1,5 +1,6 @@
 package com.example.android.inventoryapp.db;
 
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -18,7 +19,8 @@ public class ProductContract {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_PRODUCT).build();
 
-        //TODO: Add MIME types
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PRODUCT;
 
         public static final String TABLE_NAME = "product";
 
