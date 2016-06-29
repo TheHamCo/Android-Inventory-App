@@ -2,6 +2,7 @@ package com.example.android.inventoryapp.db;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.Nullable;
@@ -10,7 +11,14 @@ import android.support.annotation.Nullable;
  * Created by mdd23 on 6/29/2016.
  */
 public class ProductProvider extends ContentProvider{
-    
+
+    public static final UriMatcher sUriMatcher = buildUriMatcher();
+
+    static UriMatcher buildUriMatcher(){
+        final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+        return matcher;
+    }
+
     @Override
     public boolean onCreate() {
         return false;
