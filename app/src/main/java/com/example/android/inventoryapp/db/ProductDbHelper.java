@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
+
 /**
  * Manages a local database for the product data
  */
@@ -22,7 +24,16 @@ public class ProductDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        final String SQL_CREATE_HABITS_TABLE = "CREATE TABLE " + ProductEntry.TABLE_NAME + "("
+                + ProductEntry._ID + " INTEGER PRIMARY KEY, "
+                + ProductEntry.COLUMN_PRODUCT + " TEXT UNIQUE NOT NULL, "
+                // Streaks start at 0 days
+                + ProductEntry.COLUMN_PRICE + " REAL NOT NULL , "
+                + ProductEntry.COLUMN_QTY + " INTEGER DEFAULT 0 , "
+                + ProductEntry.COLUMN_SUPPLIER_NAME + " TEXT NOT NULL, "
+                + ProductEntry.COLUMN_SUPPLIER_EMAIL + " TEXT NOT NULL "
+                + ");";
+        db.execSQL(SQL_CREATE_HABITS_TABLE);
     }
 
     @Override
