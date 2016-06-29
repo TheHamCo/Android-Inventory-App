@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 /**
- * Created by mdd23 on 6/29/2016.
+ * Provider for Product database
  */
 public class ProductProvider extends ContentProvider{
 
@@ -19,6 +19,9 @@ public class ProductProvider extends ContentProvider{
     static final int PRODUCT = 101;
     static final int PRODUCT_WITH_ID = 102;
 
+    // _id=?
+    public static final String sProductIdSelection = ProductContract.ProductEntry._ID + "=?";
+    
     static UriMatcher buildUriMatcher(){
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = ProductContract.CONTENT_AUTHORITY;
@@ -71,7 +74,7 @@ public class ProductProvider extends ContentProvider{
                 retCursor = mOpenHelper.getReadableDatabase().query(
                          ProductContract.ProductEntry.TABLE_NAME
                         ,projection
-                        , ProductContract.ProductEntry._ID + "=?"
+                        ,sProductIdSelection
                         ,new String[]{ Long.toString(_id) }
                         ,null
                         ,null
@@ -115,8 +118,19 @@ public class ProductProvider extends ContentProvider{
         if (null == selection) selection = "1";
         switch (match){
             case PRODUCT:
-                rowsDeleted = db.delete(ProductContract.ProductEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = db.delete(
+                        ProductContract.ProductEntry.TABLE_NAME
+                        ,selection
+                        ,selectionArgs
+                );
                 break;
+            case PRODUCT_WITH_ID:
+                long _id = ProductContract.ProductEntry.getIdFromUri(uri);
+                rowsDeleted = db.delete(
+                        ProductContract.ProductEntry.TABLE_NAME
+                        ,sProductIdSelection
+                        ,new String[] {Long.toString(_id)}
+                );
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -134,8 +148,21 @@ public class ProductProvider extends ContentProvider{
 
         switch (match){
             case PRODUCT:
-                rowsUpdated = db.update(ProductContract.ProductEntry.TABLE_NAME, values, selection);
+                rowsUpdated = db.update(
+                        ProductContract.ProductEntry.TABLE_NAME
+                        ,values
+                        ,selection
+                        ,selectionArgs
+                );
                 break;
+            case PRODUCT_WITH_ID:
+                long _id = ProductContract.ProductEntry.getIdFromUri(uri);
+                rowsUpdated = db.update(
+                        ProductContract.ProductEntry.TABLE_NAME
+                        ,values
+                        ,sProductIdSelection
+                        ,new String[] { Long.toString(_id) }
+                );
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
