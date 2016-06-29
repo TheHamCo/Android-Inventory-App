@@ -4,9 +4,9 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.support.annotation.Nullable;
 
 /**
  * Created by mdd23 on 6/29/2016.
@@ -71,6 +71,23 @@ public class ProductProvider extends ContentProvider{
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        Uri returnUri;
+
+        switch(sUriMatcher.match(uri)) {
+            case PRODUCT:
+                long _id = db.insert(ProductContract.ProductEntry.TABLE_NAME, null, values);
+                if (_id>0){
+                    returnUri = ProductContract.ProductEntry.buildLocationuri(_id);
+                } else {
+                    throw new SQLException("Failed to insert row into " + uri);
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return returnUri;
     }
 
     @Override
