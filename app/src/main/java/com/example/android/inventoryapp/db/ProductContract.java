@@ -42,5 +42,9 @@ public class ProductContract {
         public static Uri buildLocationuri(long id){
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
+
+        public static long getIdFromUri(Uri uri){
+            return Long.parseLong(uri.getPathSegments().get(1));
+        }
     }
 }
