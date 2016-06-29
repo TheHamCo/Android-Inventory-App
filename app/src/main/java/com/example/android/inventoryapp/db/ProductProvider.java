@@ -17,6 +17,7 @@ public class ProductProvider extends ContentProvider{
     private ProductDbHelper mOpenHelper;
 
     static final int PRODUCT = 101;
+    static final int PRODUCT_WITH_ID = 102;
 
     static UriMatcher buildUriMatcher(){
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -24,6 +25,7 @@ public class ProductProvider extends ContentProvider{
 
         // Match URI to code
         matcher.addURI(authority, ProductContract.PATH_PRODUCT, PRODUCT);
+        matcher.addURI(authority, ProductContract.PATH_PRODUCT + "/#", PRODUCT_WITH_ID);
 
         return matcher;
     }
@@ -41,6 +43,8 @@ public class ProductProvider extends ContentProvider{
         switch (match){
             case PRODUCT:
                 return ProductContract.ProductEntry.CONTENT_TYPE;
+            case PRODUCT_WITH_ID:
+                return ProductContract.ProductEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -61,6 +65,18 @@ public class ProductProvider extends ContentProvider{
                         ,sortOrder
                 );
                 break;
+            case PRODUCT_WITH_ID:
+                long _id = ProductContract.ProductEntry.getIdFromUri(uri);
+
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                         ProductContract.ProductEntry.TABLE_NAME
+                        ,projection
+                        , ProductContract.ProductEntry._ID + "=?"
+                        ,new String[]{ Long.toString(_id) }
+                        ,null
+                        ,null
+                        ,sortOrder
+                );
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
