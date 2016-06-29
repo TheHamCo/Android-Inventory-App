@@ -22,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
         // /product
         Uri productUri = ProductEntry.CONTENT_URI;
 
+        // Clear DB
+        getContentResolver().delete(productUri, null, null);
+
         // Seed data
         ContentValues values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT, "Ice Cream");
@@ -29,6 +32,14 @@ public class MainActivity extends AppCompatActivity {
         values.put(ProductEntry.COLUMN_QTY, "5");
         values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Purity Ice Cream");
         values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "purity@icecream.com");
+        getContentResolver().insert(productUri, values);
+
+        values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT, "Coffee");
+        values.put(ProductEntry.COLUMN_PRICE, "1.00");
+        values.put(ProductEntry.COLUMN_QTY, "3");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Starbucks");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "starbucks@starbucks.com");
         getContentResolver().insert(productUri, values);
 
         // Query all data
