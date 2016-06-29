@@ -38,6 +38,7 @@ public class ProductDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL("DROP TABLE IF EXISTS " + ProductEntry.TABLE_NAME);
+        onCreate(db);
     }
 }
