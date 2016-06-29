@@ -5,12 +5,19 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * Created by mdd23 on 6/29/2016.
+ * Manages a local database for the product data
  */
 public class ProductDbHelper extends SQLiteOpenHelper {
 
-    public ProductDbHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+    public static final int DATABASE_VERSION = 1;
+    public static final String DATABASE_NAME = "products.db";
+    // Save the context to use with deleteDatabase()
+    Context context;
+
+    public ProductDbHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        // Save the context to use with deleteDatabase()
+        this.context = context;
     }
 
     @Override
