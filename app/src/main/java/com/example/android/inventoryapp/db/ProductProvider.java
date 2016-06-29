@@ -21,7 +21,7 @@ public class ProductProvider extends ContentProvider{
 
     // _id=?
     public static final String sProductIdSelection = ProductContract.ProductEntry._ID + "=?";
-    
+
     static UriMatcher buildUriMatcher(){
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = ProductContract.CONTENT_AUTHORITY;
