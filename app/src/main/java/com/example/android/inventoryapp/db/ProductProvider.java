@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.util.Log;
 
 /**
  * Provider for Product database
@@ -148,6 +149,7 @@ public class ProductProvider extends ContentProvider{
 
         switch (match){
             case PRODUCT:
+                Log.d("debug", "not matching correctly aa");
                 rowsUpdated = db.update(
                         ProductContract.ProductEntry.TABLE_NAME
                         ,values
@@ -157,12 +159,14 @@ public class ProductProvider extends ContentProvider{
                 break;
             case PRODUCT_WITH_ID:
                 long _id = ProductContract.ProductEntry.getIdFromUri(uri);
+                Log.d("update id", Long.toString(_id));
                 rowsUpdated = db.update(
                         ProductContract.ProductEntry.TABLE_NAME
                         ,values
                         ,sProductIdSelection
                         ,new String[] { Long.toString(_id) }
                 );
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }

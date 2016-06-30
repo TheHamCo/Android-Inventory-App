@@ -5,6 +5,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
@@ -20,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // /product
-        Uri productUri = ProductEntry.CONTENT_URI;
+        final Uri productUri = ProductEntry.CONTENT_URI;
 
         // Clear DB
         getContentResolver().delete(productUri, null, null);
@@ -51,10 +54,25 @@ public class MainActivity extends AppCompatActivity {
                 this
                 ,R.layout.product_card
                 ,products
-                ,new String[] { ProductEntry.COLUMN_PRODUCT, ProductEntry.COLUMN_PRICE, ProductEntry.COLUMN_QTY }
-                ,new int[] { R.id.product_name, R.id.price, R.id.qty }
+                ,new String[] { ProductEntry._ID, ProductEntry.COLUMN_PRODUCT, ProductEntry.COLUMN_PRICE, ProductEntry.COLUMN_QTY }
+                ,new int[] { R.id._id, R.id.product_name, R.id.price, R.id.qty }
         );
         productList.setAdapter(adapter);
+
+        // Track sale
+        productList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Uri productIdUri = ProductEntry.buildLocationuri(id);
+
+                Log.d("product id uri", productIdUri.toString());
+
+                ContentValues values = new ContentValues();
+                values.put(ProductEntry.COLUMN_QTY, "1000");
+
+                getContentResolver().update(productIdUri,values,null,null);
+            }
+        });
 
     }
 }

@@ -2,5 +2,6 @@
     <string name="app_name">Inventory App</string>
 
     <string name="content_authority">com.example.android.inventoryapp.app</string>
+    <string name="sell_button">Sell</string>
 
 </resources>
