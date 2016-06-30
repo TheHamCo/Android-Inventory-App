@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private ProductValidation validateAddProduct(String productName, String price, String qty, String supplierName, String supplierEmail){
         boolean isValid = true;
 //        String toastMessage = "Successfully added " + productName;
-        String toastMessage = "";
+        String toastMessage = "\n";
 
         //TODO: Refactor existence validation
         //Validate product name existence
@@ -293,6 +293,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (!priceIsValid(price)){
             isValid = false;
             toastMessage += "Please enter a valid price." +"\n";
+        } else if (Double.parseDouble(price)<0){
+            isValid = false;
+            toastMessage += "Please enter a valid price." + "\n";
         }
 
         // Validate unique product name
