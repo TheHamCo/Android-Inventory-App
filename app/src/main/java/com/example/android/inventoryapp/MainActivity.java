@@ -11,6 +11,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
@@ -24,6 +25,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
+
+import java.text.NumberFormat;
+import java.text.ParseException;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -122,6 +126,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 supplierNameEditText.setHint("Supplier Name");
                 supplierEmailEditText.setHint("Supplier Email");
 
+                priceEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                qtyEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+                supplierEmailEditText.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+
                 LinearLayout layout = new LinearLayout(getApplicationContext());
                 layout.setOrientation(LinearLayout.VERTICAL);
                 layout.addView(productNameEditText);
@@ -156,12 +164,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         String supplierName = supplierNameEditText.getText().toString();
                         String supplierEmail = supplierEmailEditText.getText().toString();
 
+                        Number priceDouble = 0;
+                        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
+                        try {
+                            priceDouble = currencyFormat.parse(price);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        Log.d("Price Number", priceDouble.toString());
+
                         if (productName.length() == 0) {
                             Toast.makeText(getBaseContext(), "Need a product name!", Toast.LENGTH_SHORT).show();
                         } else{
                             ContentValues values = new ContentValues();
                             values.put(ProductEntry.COLUMN_PRODUCT, productName);
-                            values.put(ProductEntry.COLUMN_PRICE, price);
+                            values.put(ProductEntry.COLUMN_PRICE, priceDouble.toString());
                             values.put(ProductEntry.COLUMN_QTY, qty);
                             values.put(ProductEntry.COLUMN_SUPPLIER_NAME, supplierName);
                             values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, supplierEmail);
