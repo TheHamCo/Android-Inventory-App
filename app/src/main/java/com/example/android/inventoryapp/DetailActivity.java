@@ -55,16 +55,18 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         Log.d("productIdUri", productIdUri.toString());
 
         Button decreaseQtyButton = (Button)findViewById(R.id.decrease_button);
-        assert decreaseQtyButton != null;
-        decreaseQtyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ContentValues values = new ContentValues();
-                values.put(ProductEntry.COLUMN_QTY, --currQty);
 
-                getContentResolver().update(productIdUri,values,null,null);
-            }
-        });
+        if (decreaseQtyButton != null) {
+            decreaseQtyButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ContentValues values = new ContentValues();
+                    values.put(ProductEntry.COLUMN_QTY, --currQty);
+
+                    getContentResolver().update(productIdUri,values,null,null);
+                }
+            });
+        }
 
         Button increaseQtyButton = (Button)findViewById(R.id.increase_button);
         if (increaseQtyButton != null) {
