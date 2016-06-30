@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
@@ -70,6 +71,29 @@ public class ProductAdapter extends CursorAdapter {
                 //Update the qty
                 ContentValues values = new ContentValues();
                 values.put(ProductEntry.COLUMN_QTY, ++currQty);
+
+                context.getContentResolver().update(productIdUri,values,null,null);
+            }
+        });
+
+        //Detail
+        final LinearLayout detailClickable = (LinearLayout)view.findViewById(R.id.detail_clickable);
+        detailClickable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cursor.moveToPosition(position);
+                int currQty = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_QTY));
+
+                int idIndex = cursor.getColumnIndex(ProductEntry._ID);
+                int id = cursor.getInt(idIndex);
+                Uri productIdUri = ProductEntry.buildLocationuri(id);
+
+                Log.d("product id uri", productIdUri.toString());
+                Log.d("ID", "DETAIL!!" + Integer.toString(v.getId()));
+
+                //Update the qty
+                ContentValues values = new ContentValues();
+                values.put(ProductEntry.COLUMN_PRICE, ++currQty);
 
                 context.getContentResolver().update(productIdUri,values,null,null);
             }
