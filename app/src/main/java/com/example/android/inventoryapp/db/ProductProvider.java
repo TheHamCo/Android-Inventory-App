@@ -133,6 +133,7 @@ public class ProductProvider extends ContentProvider{
                         ,sProductIdSelection
                         ,new String[] {Long.toString(_id)}
                 );
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }

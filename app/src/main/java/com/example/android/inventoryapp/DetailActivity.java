@@ -88,14 +88,17 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 public void onClick(View v) {
                     final AlertDialog dialog = new AlertDialog.Builder(DetailActivity.this)
                             .setTitle("Confirm")
-                            .setMessage("Are you sure you want to delete")
-                            .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                            .setMessage("Are you sure you want to delete " + productName +"?")
+                            .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     // Do nothing here because we overwrite later,
                                     // but this needs to be here to handle old versions of Android
                                     // SOURCE: http://stackoverflow.com/a/15619098/5302182
-                                    Toast.makeText(getBaseContext(), "Product deleted", Toast.LENGTH_SHORT).show();
+                                    getContentResolver().delete(productIdUri, null, null);
+                                    Toast.makeText(getBaseContext(), productName +" deleted", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(DetailActivity.this, MainActivity.class);
+                                    startActivity(intent);
                                 }
                             })
                             .setNegativeButton("Cancel", null)
