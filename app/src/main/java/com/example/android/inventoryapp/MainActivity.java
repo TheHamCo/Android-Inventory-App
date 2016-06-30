@@ -125,5 +125,37 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Starbucks");
         values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "starbucks@starbucks.com");
         getContentResolver().insert(productUri, values);
+
+        values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT, "Tea");
+        values.put(ProductEntry.COLUMN_PRICE, "1.00");
+        values.put(ProductEntry.COLUMN_QTY, "3");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Starbucks");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "starbucks@starbucks.com");
+        getContentResolver().insert(productUri, values);
+
+        values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT, "Espresso");
+        values.put(ProductEntry.COLUMN_PRICE, "1.00");
+        values.put(ProductEntry.COLUMN_QTY, "3");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Starbucks");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "starbucks@starbucks.com");
+        getContentResolver().insert(productUri, values);
+
+        values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT, "Latte");
+        values.put(ProductEntry.COLUMN_PRICE, "1.00");
+        values.put(ProductEntry.COLUMN_QTY, "3");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Starbucks");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "starbucks@starbucks.com");
+        getContentResolver().insert(productUri, values);
+
+        values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT, "Americano");
+        values.put(ProductEntry.COLUMN_PRICE, "1.00");
+        values.put(ProductEntry.COLUMN_QTY, "3");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Starbucks");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "starbucks@starbucks.com");
+        getContentResolver().insert(productUri, values);
     }
 }

@@ -51,6 +51,7 @@ public class ProductAdapter extends CursorAdapter {
         qtyTextView.setText(Integer.toString(qty));
 
         //Button
+        //SOLUTION SOURCE: http://stackoverflow.com/a/22444284/5302182
         final Button saleButton = (Button)view.findViewById(R.id.sale_button);
         final int position = cursor.getPosition();
         saleButton.setOnClickListener(new View.OnClickListener() {
