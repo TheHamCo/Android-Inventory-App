@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Source: http://stackoverflow.com/a/14389640/5302182
         localeSetting = getResources().getConfiguration().locale;
         Currency localCurrency = Currency.getInstance(localeSetting);
         currencySymbol = localCurrency.getSymbol(localeSetting);
