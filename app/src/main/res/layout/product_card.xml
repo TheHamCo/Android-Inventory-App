@@ -20,9 +20,9 @@
         android:id="@+id/qty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-    <!--<Button-->
-        <!--android:id="@+id/sale_button"-->
-        <!--android:text="@string/sell_button"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content" />-->
+    <Button
+        android:id="@+id/sale_button"
+        android:text="@string/sell_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>
