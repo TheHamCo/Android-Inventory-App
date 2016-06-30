@@ -57,6 +57,13 @@ public class ProductAdapter extends CursorAdapter {
         //Button
         //SOLUTION SOURCE: http://stackoverflow.com/a/22444284/5302182
         final Button saleButton = (Button)view.findViewById(R.id.sale_button);
+
+        if (qty == 0){
+            saleButton.setEnabled(false);
+        }else{
+            saleButton.setEnabled(true);
+        }
+
         final int position = cursor.getPosition();
         saleButton.setOnClickListener(new View.OnClickListener() {
             @Override
