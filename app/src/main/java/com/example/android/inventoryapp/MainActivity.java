@@ -124,12 +124,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 layout.addView(supplierNameEditText);
                 layout.addView(supplierEmailEditText);
 
-                AlertDialog dialog = new AlertDialog.Builder(this)
+                final AlertDialog dialog = new AlertDialog.Builder(this)
                         .setTitle("Add a new product")
                         .setView(layout)
-                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Add", null)
+                        .setNegativeButton("Cancel", null)
+                        .create();
+                dialog.show();
+
+                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+                        Button addButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+
+                        addButton.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onClick(View v) {
 //                                EditText productNameEditText = (EditText)findViewById(R.id.product_name_new);
 //                                EditText priceEditText = (EditText)findViewById(R.id.price_new);
 //                                EditText qtyEditText = (EditText)findViewById(R.id.qty_new);
@@ -142,15 +152,21 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                                 String supplierName = supplierNameEditText.getText().toString();
                                 String supplierEmail = supplierEmailEditText.getText().toString();
 
-                                Toast.makeText(
-                                        getBaseContext()
-                                        , productName + "\n" + price + "\n" + qty + "\n" + supplierName + "\n" + supplierEmail
-                                        , Toast.LENGTH_LONG).show();
+
+
+                                if (true) {
+                                    Toast.makeText(getBaseContext(), "Need a product name!", Toast.LENGTH_SHORT).show();
+                                } else{
+                                    Toast.makeText(
+                                            getBaseContext()
+                                            , productName + "\n" + price + "\n" + qty + "\n" + supplierName + "\n" + supplierEmail
+                                            , Toast.LENGTH_LONG).show();
+                                    dialog.dismiss();
+                                }
                             }
-                        })
-                        .setNegativeButton("Cancel", null)
-                        .create();
-                dialog.show();
+                        });
+                    }
+                });
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
