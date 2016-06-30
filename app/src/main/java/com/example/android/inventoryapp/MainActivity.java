@@ -4,6 +4,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -12,17 +15,21 @@ import android.widget.ListView;
 
 import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     ListView productList;
+
+    // /product
+    final static Uri productUri = ProductEntry.CONTENT_URI;
+
+    private ProductAdapter productAdapter;
+
+    public static final int LIST_LOADER = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // /product
-        final Uri productUri = ProductEntry.CONTENT_URI;
 
         // Clear DB
         getContentResolver().delete(productUri, null, null);
@@ -45,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
         getContentResolver().insert(productUri, values);
 
         // Query all data
-        Cursor products = getContentResolver().query(productUri, null, null, null, null);
+//        Cursor products = getContentResolver().query(productUri, null, null, null, null);
+        getSupportLoaderManager().initLoader(0, null, this);
 
         // ListView
         productList = (ListView) findViewById(R.id.product_list);
@@ -56,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
 //                ,new String[] { ProductEntry._ID, ProductEntry.COLUMN_PRODUCT, ProductEntry.COLUMN_PRICE, ProductEntry.COLUMN_QTY }
 //                ,new int[] { R.id._id, R.id.product_name, R.id.price, R.id.qty }
 //        );
-        ProductAdapter adapter = new ProductAdapter(this, products);
-        productList.setAdapter(adapter);
+        productAdapter = new ProductAdapter(this, null);
+        productList.setAdapter(productAdapter);
 
         // Track sale
         productList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -79,5 +87,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
     }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(
+                this
+                ,productUri
+                ,null, null ,null, null
+        );
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor products) {
+        productAdapter.swapCursor(products);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {}
 }
