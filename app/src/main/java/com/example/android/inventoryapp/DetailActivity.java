@@ -32,6 +32,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     String supplierName;
     String supplierEmail;
     String productName;
+    Button decreaseQtyButton;
     public static final int DETAIL_LOADER = 0;
 
 //    @Override
@@ -54,8 +55,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         getSupportLoaderManager().initLoader(DETAIL_LOADER, null, this);
         Log.d("productIdUri", productIdUri.toString());
 
-        Button decreaseQtyButton = (Button)findViewById(R.id.decrease_button);
-
+        decreaseQtyButton = (Button)findViewById(R.id.decrease_button);
         if (decreaseQtyButton != null) {
             decreaseQtyButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -162,10 +162,17 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             Double price = data.getDouble(priceIndex);
             priceTextView.setText(String.format("%.02f", price));
 
+            // TODO: refactor to not have redundant cursor calls for qty
             int qtyIndex = data.getColumnIndex(ProductEntry.COLUMN_QTY);
             TextView qtyTextView = (TextView)findViewById(R.id.qty);
             String qty = data.getString(qtyIndex);
             qtyTextView.setText(qty);
+
+            if (currQty == 0){
+                decreaseQtyButton.setEnabled(false);
+            }else{
+                decreaseQtyButton.setEnabled(true);
+            }
         }
     }
 
