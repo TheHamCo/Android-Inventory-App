@@ -127,44 +127,38 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 final AlertDialog dialog = new AlertDialog.Builder(this)
                         .setTitle("Add a new product")
                         .setView(layout)
-                        .setPositiveButton("Add", null)
+                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Do nothing here because we overwrite later,
+                                // but this needs to be here to handle old versions of Android
+                                // SOURCE: http://stackoverflow.com/a/15619098/5302182
+                            }
+                        })
                         .setNegativeButton("Cancel", null)
                         .create();
                 dialog.show();
 
-                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                // Override AlertDialog default closing behavior to validate data
+                // SOURCE: http://stackoverflow.com/a/15619098/5302182
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onShow(DialogInterface dialogInterface) {
-                        Button addButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                    public void onClick(View v) {
+                        String productName = productNameEditText.getText().toString();
+                        String price = priceEditText.getText().toString();
+                        String qty = qtyEditText.getText().toString();
+                        String supplierName = supplierNameEditText.getText().toString();
+                        String supplierEmail = supplierEmailEditText.getText().toString();
 
-                        addButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-//                                EditText productNameEditText = (EditText)findViewById(R.id.product_name_new);
-//                                EditText priceEditText = (EditText)findViewById(R.id.price_new);
-//                                EditText qtyEditText = (EditText)findViewById(R.id.qty_new);
-//                                EditText supplierNameEditText = (EditText)findViewById(R.id.supplier_name_new);
-//                                EditText supplierEmailEditText = (EditText)findViewById(R.id.supplier_email_new);
-
-                                String productName = productNameEditText.getText().toString();
-                                String price = priceEditText.getText().toString();
-                                String qty = qtyEditText.getText().toString();
-                                String supplierName = supplierNameEditText.getText().toString();
-                                String supplierEmail = supplierEmailEditText.getText().toString();
-
-
-
-                                if (true) {
-                                    Toast.makeText(getBaseContext(), "Need a product name!", Toast.LENGTH_SHORT).show();
-                                } else{
-                                    Toast.makeText(
-                                            getBaseContext()
-                                            , productName + "\n" + price + "\n" + qty + "\n" + supplierName + "\n" + supplierEmail
-                                            , Toast.LENGTH_LONG).show();
-                                    dialog.dismiss();
-                                }
-                            }
-                        });
+                        if (productName.length() == 0) {
+                            Toast.makeText(getBaseContext(), "Need a product name!", Toast.LENGTH_SHORT).show();
+                        } else{
+                            Toast.makeText(
+                                    getBaseContext()
+                                    , productName + "\n" + price + "\n" + qty + "\n" + supplierName + "\n" + supplierEmail
+                                    , Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                        }
                     }
                 });
                 return true;
