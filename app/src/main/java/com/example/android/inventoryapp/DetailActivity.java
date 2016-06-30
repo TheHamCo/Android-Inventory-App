@@ -86,6 +86,16 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             String productName = data.getString(productIndex);
             productNameTextView.setText(productName);
 
+            int supplierIndex = data.getColumnIndex(ProductEntry.COLUMN_SUPPLIER_NAME);
+            TextView supplierTextView = (TextView) findViewById(R.id.supplier_name);
+            String supplier = data.getString(supplierIndex);
+            supplierTextView.setText(supplier);
+
+            int priceIndex = data.getColumnIndex(ProductEntry.COLUMN_PRICE);
+            TextView priceTextView = (TextView) findViewById(R.id.price);
+            String price = data.getString(priceIndex);
+            priceTextView.setText(price);
+
             int qtyIndex = data.getColumnIndex(ProductEntry.COLUMN_QTY);
             TextView qtyTextView = (TextView)findViewById(R.id.qty);
             String qty = data.getString(qtyIndex);
