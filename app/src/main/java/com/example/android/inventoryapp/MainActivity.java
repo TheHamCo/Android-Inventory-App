@@ -11,6 +11,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -86,6 +87,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         });
 
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.add_product, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
