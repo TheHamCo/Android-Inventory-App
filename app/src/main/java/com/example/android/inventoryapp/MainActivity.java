@@ -222,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 //        String toastMessage = "Successfully added " + productName;
         String toastMessage = "";
 
+        //TODO: Validate unique product name
         if (productName.length()==0){
             isValid = false;
             toastMessage += "Please enter a product name.";

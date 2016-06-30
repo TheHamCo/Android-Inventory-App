@@ -51,7 +51,7 @@ public class ProductAdapter extends CursorAdapter {
         idTextView.setText(Long.toString(id));
         productTextView.setText(product);
         // Display price in format "xx.xx"
-        priceTextView.setText(String.format("%.2f", price));
+        priceTextView.setText(String.format("%.02f", price));
         qtyTextView.setText(Integer.toString(qty));
 
         //Button

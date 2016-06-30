@@ -158,7 +158,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             TextView priceTextView = (TextView) findViewById(R.id.price);
             // Display price in format "xx.xx"
             Double price = data.getDouble(priceIndex);
-            priceTextView.setText(String.format("%.2f", price));
+            priceTextView.setText(String.format("%.02f", price));
 
             int qtyIndex = data.getColumnIndex(ProductEntry.COLUMN_QTY);
             TextView qtyTextView = (TextView)findViewById(R.id.qty);
