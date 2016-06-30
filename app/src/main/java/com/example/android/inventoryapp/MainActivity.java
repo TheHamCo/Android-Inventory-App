@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 //Update the qty
                 ContentValues values = new ContentValues();
                 values.put(ProductEntry.COLUMN_QTY, ++currQty);
-                
+
                 getContentResolver().update(productIdUri,values,null,null);
             }
         });
