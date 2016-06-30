@@ -44,12 +44,14 @@ public class ProductAdapter extends CursorAdapter {
 
         final long id = cursor.getLong(idIndex);
         String product = cursor.getString(productIndex);
-        String price = cursor.getString(priceIndex);
+        // Display price in format "xx.xx"
+        Double price = cursor.getDouble(priceIndex);
         int qty = cursor.getInt(qtyIndex);
 
         idTextView.setText(Long.toString(id));
         productTextView.setText(product);
-        priceTextView.setText(price);
+        // Display price in format "xx.xx"
+        priceTextView.setText(String.format("%.2f", price));
         qtyTextView.setText(Integer.toString(qty));
 
         //Button
