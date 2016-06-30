@@ -23,8 +23,11 @@ import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
  */
 public class ProductAdapter extends CursorAdapter {
 
-    public ProductAdapter(Context context, Cursor c) {
+    String currencySymbol;
+
+    public ProductAdapter(Context context, Cursor c, String currencySymbol) {
         super(context, c, 0);
+        this.currencySymbol = currencySymbol;
     }
 
     @Override
@@ -52,8 +55,8 @@ public class ProductAdapter extends CursorAdapter {
 
         idTextView.setText(Long.toString(id));
         productTextView.setText(product);
-        // Display price in format "xx.xx"
-        priceTextView.setText(String.format("%.02f", price));
+        // Display price in format "[currency symbol]xx.xx"
+        priceTextView.setText(currencySymbol + String.format("%.02f", price));
         qtyTextView.setText(Integer.toString(qty));
 
         //Button

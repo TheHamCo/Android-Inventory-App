@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 //                ,new String[] { ProductEntry._ID, ProductEntry.COLUMN_PRODUCT, ProductEntry.COLUMN_PRICE, ProductEntry.COLUMN_QTY }
 //                ,new int[] { R.id._id, R.id.product_name, R.id.price, R.id.qty }
 //        );
-        productAdapter = new ProductAdapter(this, null);
+        productAdapter = new ProductAdapter(this, null, currencySymbol);
         productList.setAdapter(productAdapter);
 
         // Track sale
