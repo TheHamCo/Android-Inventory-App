@@ -40,18 +40,30 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         getSupportLoaderManager().initLoader(DETAIL_LOADER, null, this);
         Log.d("productIdUri", productIdUri.toString());
 
-        Button saleButton = (Button)findViewById(R.id.sale_button);
-        assert saleButton != null;
-        saleButton.setOnClickListener(new View.OnClickListener() {
+        Button decreaseQtyButton = (Button)findViewById(R.id.decrease_button);
+        assert decreaseQtyButton != null;
+        decreaseQtyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Update the qty
                 ContentValues values = new ContentValues();
-                values.put(ProductEntry.COLUMN_QTY, ++currQty);
+                values.put(ProductEntry.COLUMN_QTY, --currQty);
 
                 getContentResolver().update(productIdUri,values,null,null);
             }
         });
+
+        Button increaseQtyButton = (Button)findViewById(R.id.increase_button);
+        if (increaseQtyButton != null) {
+            increaseQtyButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ContentValues values = new ContentValues();
+                    values.put(ProductEntry.COLUMN_QTY, ++currQty);
+
+                    getContentResolver().update(productIdUri,values,null,null);
+                }
+            });
+        }
     }
 
     @Override
