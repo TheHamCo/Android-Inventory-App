@@ -38,7 +38,7 @@ public class ProductDbHelper extends SQLiteOpenHelper {
 
         // Seed data
         ContentValues values = new ContentValues();
-        values.put(ProductEntry.COLUMN_PRODUCT, "Ice Cream");
+        values.put(ProductEntry.COLUMN_PRODUCT, "Ice Cubes");
         values.put(ProductEntry.COLUMN_PRICE, "2.00");
         values.put(ProductEntry.COLUMN_QTY, "5");
         values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Purity Ice Cream");
