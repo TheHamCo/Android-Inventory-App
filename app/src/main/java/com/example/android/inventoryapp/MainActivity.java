@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                             Log.d("Added Product", addedProdUri.toString());
                             Toast.makeText(
                                     getBaseContext()
-                                    , productName + "\n" + price + "\n" + qty + "\n" + supplierName + "\n" + supplierEmail
+                                    , "Successfully added " + "'" + productName + "'!"
                                     , Toast.LENGTH_LONG).show();
                             dialog.dismiss();
                         } else{
