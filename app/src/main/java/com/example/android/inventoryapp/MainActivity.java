@@ -329,6 +329,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return new ProductValidation(isValid, toastMessage);
     }
 
+    // Source: http://stackoverflow.com/questions/457629/how-to-return-multiple-objects-from-a-java-method
     private class ProductValidation {
         private boolean isValid;
         private String toastMessage;
