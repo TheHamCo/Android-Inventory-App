@@ -120,6 +120,7 @@ public class ProductAdapter extends CursorAdapter {
 
                 Intent detailIntent = new Intent(context, DetailActivity.class);
                 detailIntent.putExtra("detailUri", productIdUri.toString());
+                detailIntent.putExtra("currencySymbol", currencySymbol);
 
                 Log.d("product id uri", productIdUri.toString());
                 context.startActivity(detailIntent);

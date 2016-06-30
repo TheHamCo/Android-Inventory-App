@@ -33,6 +33,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     String supplierEmail;
     String productName;
     Button decreaseQtyButton;
+    String currencySymbol;
     public static final int DETAIL_LOADER = 0;
 
 //    @Override
@@ -51,6 +52,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
 
         Intent detailIntent = getIntent();
+        currencySymbol = detailIntent.getStringExtra("currencySymbol");
         productIdUri = Uri.parse(detailIntent.getStringExtra("detailUri"));
         getSupportLoaderManager().initLoader(DETAIL_LOADER, null, this);
         Log.d("productIdUri", productIdUri.toString());
@@ -158,9 +160,9 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
             int priceIndex = data.getColumnIndex(ProductEntry.COLUMN_PRICE);
             TextView priceTextView = (TextView) findViewById(R.id.price);
-            // Display price in format "xx.xx"
+            // Display price in format "[currrency symbol]xx.xx"
             Double price = data.getDouble(priceIndex);
-            priceTextView.setText(String.format("%.02f", price));
+            priceTextView.setText(currencySymbol + String.format("%.02f", price));
 
             // TODO: refactor to not have redundant cursor calls for qty
             int qtyIndex = data.getColumnIndex(ProductEntry.COLUMN_QTY);
