@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     //locale for currency
     Locale localeSetting;
+    //Currency symbol
+    String currencySymbol;
 
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
@@ -57,7 +59,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_main);
 
         localeSetting = getResources().getConfiguration().locale;
-
+        Currency localCurrency = Currency.getInstance(localeSetting);
+        currencySymbol = localCurrency.getSymbol(localeSetting);
         Button seedButton = (Button)findViewById(R.id.reseed_button);
         if (seedButton != null) {
             seedButton.setOnClickListener(new View.OnClickListener() {
@@ -178,9 +181,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 //                        } catch (ParseException e) {
 //                            e.printStackTrace();
 //                        }
-                        Currency localCurrency = Currency.getInstance(localeSetting);
-                        Log.d("currency symbol", localCurrency.getSymbol(localeSetting));
-                        price = price.replaceAll("[" + localCurrency.getSymbol(localeSetting) + "]", "");
+                        Log.d("currency symbol", currencySymbol);
+                        price = price.replaceAll("[" + currencySymbol + "]", "");
                         price = price.replaceAll("[,]", "");
 
                         Log.d("Price Number", price);
