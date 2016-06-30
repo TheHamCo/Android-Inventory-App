@@ -1,5 +1,6 @@
 package com.example.android.inventoryapp;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -9,6 +10,8 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
@@ -16,6 +19,7 @@ import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
     Uri productIdUri;
+    int currQty;
     public static final int DETAIL_LOADER = 0;
 
 //    @Override
@@ -36,6 +40,18 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         getSupportLoaderManager().initLoader(DETAIL_LOADER, null, this);
         Log.d("productIdUri", productIdUri.toString());
 
+        Button saleButton = (Button)findViewById(R.id.sale_button);
+        assert saleButton != null;
+        saleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Update the qty
+                ContentValues values = new ContentValues();
+                values.put(ProductEntry.COLUMN_QTY, ++currQty);
+
+                getContentResolver().update(productIdUri,values,null,null);
+            }
+        });
     }
 
     @Override
@@ -51,14 +67,17 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
         if (data.moveToFirst()) {
+            currQty = data.getInt(data.getColumnIndex(ProductEntry.COLUMN_QTY));
+
             int productIndex = data.getColumnIndex(ProductEntry.COLUMN_PRODUCT);
             TextView productNameTextView = (TextView) findViewById(R.id.product_name);
-
-//        String productName = "hey";
-//        String productName = data.getString(2);
             String productName = data.getString(productIndex);
-
             productNameTextView.setText(productName);
+
+            int qtyIndex = data.getColumnIndex(ProductEntry.COLUMN_QTY);
+            TextView qtyTextView = (TextView)findViewById(R.id.qty);
+            String qty = data.getString(qtyIndex);
+            qtyTextView.setText(qty);
         }
     }
 
