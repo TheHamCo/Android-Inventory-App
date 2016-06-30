@@ -63,15 +63,18 @@ public class MainActivity extends AppCompatActivity {
         productList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Get the current qty
                 Cursor prodCursor = (Cursor)parent.getItemAtPosition(position);
                 int currQty = prodCursor.getInt(prodCursor.getColumnIndex(ProductEntry.COLUMN_QTY));
+                //URI of this entry
                 Uri productIdUri = ProductEntry.buildLocationuri(id);
 
                 Log.d("product id uri", productIdUri.toString());
 
+                //Update the qty
                 ContentValues values = new ContentValues();
                 values.put(ProductEntry.COLUMN_QTY, ++currQty);
-
+                
                 getContentResolver().update(productIdUri,values,null,null);
             }
         });
