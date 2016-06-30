@@ -2,20 +2,26 @@ package com.example.android.inventoryapp;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
 
@@ -88,11 +94,63 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
     }
-
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.add_product, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.add_product:
+//                final View addView = getLayoutInflater().inflate(R.layout.add_product_view, null);
+                final EditText productNameEditText = new EditText(this);
+                final EditText priceEditText = new EditText(this);
+                final EditText qtyEditText = new EditText(this);
+                final EditText supplierNameEditText = new EditText(this);
+                final EditText supplierEmailEditText = new EditText(this);
+
+                LinearLayout layout = new LinearLayout(getApplicationContext());
+                layout.setOrientation(LinearLayout.VERTICAL);
+                layout.addView(productNameEditText);
+                layout.addView(priceEditText);
+                layout.addView(qtyEditText);
+                layout.addView(supplierNameEditText);
+                layout.addView(supplierEmailEditText);
+
+                AlertDialog dialog = new AlertDialog.Builder(this)
+                        .setTitle("Add a new product")
+                        .setView(layout)
+                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+//                                EditText productNameEditText = (EditText)findViewById(R.id.product_name_new);
+//                                EditText priceEditText = (EditText)findViewById(R.id.price_new);
+//                                EditText qtyEditText = (EditText)findViewById(R.id.qty_new);
+//                                EditText supplierNameEditText = (EditText)findViewById(R.id.supplier_name_new);
+//                                EditText supplierEmailEditText = (EditText)findViewById(R.id.supplier_email_new);
+
+                                String productName = productNameEditText.getText().toString();
+                                String price = priceEditText.getText().toString();
+                                String qty = qtyEditText.getText().toString();
+                                String supplierName = supplierNameEditText.getText().toString();
+                                String supplierEmail = supplierEmailEditText.getText().toString();
+
+                                Toast.makeText(
+                                        getBaseContext()
+                                        , productName + "\n" + price + "\n" + qty + "\n" + supplierName + "\n" + supplierEmail
+                                        , Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .create();
+                dialog.show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
