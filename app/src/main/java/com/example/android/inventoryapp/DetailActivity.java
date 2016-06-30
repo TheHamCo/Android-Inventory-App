@@ -1,6 +1,7 @@
 package com.example.android.inventoryapp;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -8,14 +9,22 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
 
+// Used to extend Activity instead of AppCompatActivity to support AlertDialog
+// SOURCE: http://stackoverflow.com/a/21815015/5302182
+// Then FragmentActivity
+// Then back to AppCompatActivity on recc of:
+// http://stackoverflow.com/questions/28795544/adding-actionbar-to-fragmentactivity
+// TODO: Figure out why
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
     Uri productIdUri;
@@ -35,6 +44,8 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+
         Intent detailIntent = getIntent();
         productIdUri = Uri.parse(detailIntent.getStringExtra("detailUri"));
         getSupportLoaderManager().initLoader(DETAIL_LOADER, null, this);
@@ -61,6 +72,32 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                     values.put(ProductEntry.COLUMN_QTY, ++currQty);
 
                     getContentResolver().update(productIdUri,values,null,null);
+                }
+            });
+        }
+
+        // Delete product button
+        Button deleteProductButton = (Button)findViewById(R.id.delete_product_button);
+        if (deleteProductButton != null) {
+            deleteProductButton.setOnClickListener(new View.OnClickListener() {
+                //TODO: put strings in resources
+                @Override
+                public void onClick(View v) {
+                    final AlertDialog dialog = new AlertDialog.Builder(DetailActivity.this)
+                            .setTitle("Confirm")
+                            .setMessage("Are you sure you want to delete")
+                            .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Do nothing here because we overwrite later,
+                                    // but this needs to be here to handle old versions of Android
+                                    // SOURCE: http://stackoverflow.com/a/15619098/5302182
+                                    Toast.makeText(getBaseContext(), "Product deleted", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .create();
+                    dialog.show();
                 }
             });
         }

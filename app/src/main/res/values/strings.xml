@@ -3,5 +3,7 @@
 
     <string name="content_authority">com.example.android.inventoryapp.app</string>
     <string name="sell_button">Sell</string>
+    <string name="delete_product_button">Delete this product</string>
+    <string name="order_more_button">Order more from supplier</string>
 
 </resources>

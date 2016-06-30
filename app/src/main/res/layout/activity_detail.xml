@@ -45,5 +45,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     </LinearLayout>
+    <Button
+        android:id="@+id/order_more_button"
+        android:text="@string/order_more_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/delete_product_button"
+        android:text="@string/delete_product_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>
 </ScrollView>
