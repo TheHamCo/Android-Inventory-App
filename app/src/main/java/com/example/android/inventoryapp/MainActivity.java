@@ -94,13 +94,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.add_product, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    // Source: http://stackoverflow.com/a/18176909/5302182
+    //TODO: add hints
+    //TODO: try http://stackoverflow.com/questions/2335813/how-to-inflate-one-view-with-a-layout
+    //TODO: email validate Patterns.EMAIL_ADDRESS.matcher(<your Email EditText input String here>).matches()
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
