@@ -26,8 +26,8 @@ import android.widget.Toast;
 
 import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
 
-import java.text.NumberFormat;
-import java.text.ParseException;
+import java.util.Currency;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -40,6 +40,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     public static final int LIST_LOADER = 0;
 
+    //locale for currency
+    Locale localeSetting;
+
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
         getSupportLoaderManager().initLoader(0, null, this);
@@ -50,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        localeSetting = getResources().getConfiguration().locale;
 
         Button seedButton = (Button)findViewById(R.id.reseed_button);
         if (seedButton != null) {
@@ -164,22 +169,26 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         String supplierName = supplierNameEditText.getText().toString();
                         String supplierEmail = supplierEmailEditText.getText().toString();
 
-                        Number priceDouble = 0;
-                        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
-                        try {
-                            priceDouble = currencyFormat.parse(price);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
+//                        Number priceDouble = 0;
+//                        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
+//                        try {
+//                            priceDouble = currencyFormat.parse(price);
+//                        } catch (ParseException e) {
+//                            e.printStackTrace();
+//                        }
+                        Currency localCurrency = Currency.getInstance(localeSetting);
+                        Log.d("currency symbol", localCurrency.getSymbol(localeSetting));
+                        price = price.replaceAll("[" + localCurrency.getSymbol(localeSetting) + "]", "");
+                        price = price.replaceAll("[,]", "");
 
-                        Log.d("Price Number", priceDouble.toString());
+                        Log.d("Price Number", price);
 
                         if (productName.length() == 0) {
                             Toast.makeText(getBaseContext(), "Need a product name!", Toast.LENGTH_SHORT).show();
                         } else{
                             ContentValues values = new ContentValues();
                             values.put(ProductEntry.COLUMN_PRODUCT, productName);
-                            values.put(ProductEntry.COLUMN_PRICE, priceDouble.toString());
+                            values.put(ProductEntry.COLUMN_PRICE, price);
                             values.put(ProductEntry.COLUMN_QTY, qty);
                             values.put(ProductEntry.COLUMN_SUPPLIER_NAME, supplierName);
                             values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, supplierEmail);
