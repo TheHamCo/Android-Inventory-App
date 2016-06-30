@@ -153,6 +153,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         if (productName.length() == 0) {
                             Toast.makeText(getBaseContext(), "Need a product name!", Toast.LENGTH_SHORT).show();
                         } else{
+                            ContentValues values = new ContentValues();
+                            values.put(ProductEntry.COLUMN_PRODUCT, productName);
+                            values.put(ProductEntry.COLUMN_PRICE, price);
+                            values.put(ProductEntry.COLUMN_QTY, qty);
+                            values.put(ProductEntry.COLUMN_SUPPLIER_NAME, supplierName);
+                            values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, supplierEmail);
+
+                            Uri addedProdUri = getContentResolver().insert(productUri, values);
+                            Log.d("Added Product", addedProdUri.toString());
                             Toast.makeText(
                                     getBaseContext()
                                     , productName + "\n" + price + "\n" + qty + "\n" + supplierName + "\n" + supplierEmail
