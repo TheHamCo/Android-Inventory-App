@@ -101,6 +101,22 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 }
             });
         }
+
+        Button orderMoreButton = (Button)findViewById(R.id.order_more_button);
+        if (orderMoreButton != null) {
+            orderMoreButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_SENDTO);
+                    intent.setData(Uri.parse("mailto:"))
+                            .putExtra(Intent.EXTRA_EMAIL, new String[] {"test@test.com"})
+                            .putExtra(Intent.EXTRA_SUBJECT, "Order More");
+                    if (intent.resolveActivity(getPackageManager()) != null){
+                        startActivity(intent);
+                    }
+                }
+            });
+        }
     }
 
     @Override
