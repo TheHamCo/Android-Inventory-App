@@ -193,6 +193,34 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {}
 
+    private AddProductValidation ValidateAddProduct(String productName, String price, String qty, String supplierName, String supplierEmail){
+        boolean isValid = true;
+        String toastMessage = "Successfully added " + productName;
+
+
+
+        return new AddProductValidation(isValid, toastMessage);
+    }
+
+    private class AddProductValidation {
+        private boolean isValid;
+        private String toastMessage;
+
+        public AddProductValidation(boolean isValid, String toastMessage) {
+            this.isValid = isValid;
+            this.toastMessage = toastMessage;
+        }
+
+        public boolean isValid() {
+            return isValid;
+        }
+
+        public String getToastMessage() {
+            return toastMessage;
+        }
+    }
+
+
     public void seedData(){
         // Clear DB
         getContentResolver().delete(productUri, null, null);
