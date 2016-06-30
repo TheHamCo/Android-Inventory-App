@@ -2,6 +2,7 @@ package com.example.android.inventoryapp;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
@@ -88,14 +89,18 @@ public class ProductAdapter extends CursorAdapter {
                 int id = cursor.getInt(idIndex);
                 Uri productIdUri = ProductEntry.buildLocationuri(id);
 
+                Intent detailIntent = new Intent(context, DetailActivity.class);
+                detailIntent.putExtra("detailUri", productIdUri.toString());
+
                 Log.d("product id uri", productIdUri.toString());
-                Log.d("ID", "DETAIL!!" + Integer.toString(v.getId()));
-
-                //Update the qty
-                ContentValues values = new ContentValues();
-                values.put(ProductEntry.COLUMN_PRICE, ++currQty);
-
-                context.getContentResolver().update(productIdUri,values,null,null);
+                context.startActivity(detailIntent);
+//                Log.d("ID", "DETAIL!!" + Integer.toString(v.getId()));
+//
+//                //Update the qty
+//                ContentValues values = new ContentValues();
+//                values.put(ProductEntry.COLUMN_PRICE, ++currQty);
+//
+//                context.getContentResolver().update(productIdUri,values,null,null);
             }
         });
     }

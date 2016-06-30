@@ -81,6 +81,7 @@ public class ProductProvider extends ContentProvider{
                         ,null
                         ,sortOrder
                 );
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
