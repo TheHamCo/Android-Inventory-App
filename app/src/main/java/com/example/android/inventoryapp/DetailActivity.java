@@ -25,6 +25,7 @@ import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
 // Then back to AppCompatActivity on recc of:
 // http://stackoverflow.com/questions/28795544/adding-actionbar-to-fragmentactivity
 // TODO: Figure out why
+// http://stackoverflow.com/questions/21814825/you-need-to-use-a-theme-appcompat-theme-or-descendant-with-this-activity
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
     Uri productIdUri;
