@@ -73,7 +73,7 @@ public class ProductAdapter extends CursorAdapter {
 
                 //Update the qty
                 ContentValues values = new ContentValues();
-                values.put(ProductEntry.COLUMN_QTY, ++currQty);
+                values.put(ProductEntry.COLUMN_QTY, --currQty);
 
                 context.getContentResolver().update(productIdUri,values,null,null);
             }
