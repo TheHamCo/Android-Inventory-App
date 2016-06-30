@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -231,10 +232,36 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 //        String toastMessage = "Successfully added " + productName;
         String toastMessage = "";
 
-        //TODO: Validate unique product name
+        //TODO: Refactor existence validation
+        //Validate product name existence
         if (productName.length()==0){
             isValid = false;
-            toastMessage += "Please enter a product name.";
+            toastMessage += "Please enter a product name." + "\n";
+        }
+
+        // Validate unique product name
+        Cursor checkDuplicate = getContentResolver().query(productUri,null, ProductEntry.COLUMN_PRODUCT + "=?", new String[] { productName }, null);
+        if (checkDuplicate.getCount() > 0){
+            isValid = false;
+            toastMessage += "Product is already in inventory." + "\n";
+        }
+
+        //Validate supplier name existence
+        if (supplierName.length()==0){
+            isValid = false;
+            toastMessage += "Please enter a product name." + "\n";
+        }
+
+        //Validate supplier email existence
+        if (supplierEmail.length()==0){
+            isValid = false;
+            toastMessage += "Please enter a product name." + "\n";
+        }
+
+        // Validate Email
+        if (!Patterns.EMAIL_ADDRESS.matcher(supplierEmail).matches()){
+            isValid = false;
+            toastMessage += "Please enter a valid email address."  + "\n";
         }
 
 
