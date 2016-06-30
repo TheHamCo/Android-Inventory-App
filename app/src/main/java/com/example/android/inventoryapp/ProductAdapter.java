@@ -15,8 +15,8 @@ import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
  */
 public class ProductAdapter extends CursorAdapter {
 
-    public ProductAdapter(Context context, Cursor c, int flags) {
-        super(context, c, flags);
+    public ProductAdapter(Context context, Cursor c) {
+        super(context, c, 0);
     }
 
     @Override
