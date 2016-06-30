@@ -116,6 +116,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 final EditText supplierNameEditText = new EditText(this);
                 final EditText supplierEmailEditText = new EditText(this);
 
+
+
                 LinearLayout layout = new LinearLayout(getApplicationContext());
                 layout.setOrientation(LinearLayout.VERTICAL);
                 layout.addView(productNameEditText);
@@ -195,8 +197,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private AddProductValidation ValidateAddProduct(String productName, String price, String qty, String supplierName, String supplierEmail){
         boolean isValid = true;
-        String toastMessage = "Successfully added " + productName;
+//        String toastMessage = "Successfully added " + productName;
+        String toastMessage = "";
 
+        if (productName.length()==0){
+            isValid = false;
+            toastMessage += "Please enter a product name.";
+        }
 
 
         return new AddProductValidation(isValid, toastMessage);
