@@ -29,6 +29,9 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
     Uri productIdUri;
     int currQty;
+    String supplierName;
+    String supplierEmail;
+    String productName;
     public static final int DETAIL_LOADER = 0;
 
 //    @Override
@@ -109,8 +112,11 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 public void onClick(View v) {
                     Intent intent = new Intent(Intent.ACTION_SENDTO);
                     intent.setData(Uri.parse("mailto:"))
-                            .putExtra(Intent.EXTRA_EMAIL, new String[] {"test@test.com"})
-                            .putExtra(Intent.EXTRA_SUBJECT, "Order More");
+                            .putExtra(Intent.EXTRA_EMAIL, new String[] {supplierEmail})
+                            //TODO: Move to strings resources
+                            //TODO: format punctuation
+                            .putExtra(Intent.EXTRA_SUBJECT, "Order Request for '" + productName +"'")
+                            .putExtra(Intent.EXTRA_TEXT, "Dear " + supplierName + ":\n\nWe would like to order more of your product '" + productName + ".'\n\nRegards,\n");
                     if (intent.resolveActivity(getPackageManager()) != null){
                         startActivity(intent);
                     }
@@ -133,16 +139,17 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
         if (data.moveToFirst()) {
             currQty = data.getInt(data.getColumnIndex(ProductEntry.COLUMN_QTY));
+            supplierEmail = data.getString(data.getColumnIndex(ProductEntry.COLUMN_SUPPLIER_EMAIL));
 
             int productIndex = data.getColumnIndex(ProductEntry.COLUMN_PRODUCT);
             TextView productNameTextView = (TextView) findViewById(R.id.product_name);
-            String productName = data.getString(productIndex);
+            productName = data.getString(productIndex);
             productNameTextView.setText(productName);
 
             int supplierIndex = data.getColumnIndex(ProductEntry.COLUMN_SUPPLIER_NAME);
             TextView supplierTextView = (TextView) findViewById(R.id.supplier_name);
-            String supplier = data.getString(supplierIndex);
-            supplierTextView.setText(supplier);
+            supplierName = data.getString(supplierIndex);
+            supplierTextView.setText(supplierName);
 
             int priceIndex = data.getColumnIndex(ProductEntry.COLUMN_PRICE);
             TextView priceTextView = (TextView) findViewById(R.id.price);
