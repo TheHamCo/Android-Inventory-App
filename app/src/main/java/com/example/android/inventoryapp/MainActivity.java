@@ -13,6 +13,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
@@ -32,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
         getSupportLoaderManager().initLoader(0, null, this);
         return super.onCreateView(parent, name, context, attrs);
-
     }
 
     @Override
@@ -40,6 +40,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Button seedButton = (Button)findViewById(R.id.reseed_button);
+        if (seedButton != null) {
+            seedButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    seedData();
+                }
+            });
+        }
 
         // Query all data
 //        Cursor products = getContentResolver().query(productUri, null, null, null, null);
@@ -95,4 +104,26 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {}
+
+    public void seedData(){
+        // Clear DB
+        getContentResolver().delete(productUri, null, null);
+
+        // Seed data
+        ContentValues values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT, "Ice Cream");
+        values.put(ProductEntry.COLUMN_PRICE, "2.00");
+        values.put(ProductEntry.COLUMN_QTY, "5");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Purity Ice Cream");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "purity@icecream.com");
+        getContentResolver().insert(productUri, values);
+
+        values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT, "Coffee");
+        values.put(ProductEntry.COLUMN_PRICE, "1.00");
+        values.put(ProductEntry.COLUMN_QTY, "3");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Starbucks");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "starbucks@starbucks.com");
+        getContentResolver().insert(productUri, values);
+    }
 }
