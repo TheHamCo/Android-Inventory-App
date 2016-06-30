@@ -185,9 +185,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
                         Log.d("Price Number", price);
 
-                        if (productName.length() == 0) {
-                            Toast.makeText(getBaseContext(), "Need a product name!", Toast.LENGTH_SHORT).show();
-                        } else{
+                        ProductValidation productValidation = validateAddProduct(productName, price, qty, supplierName, supplierEmail);
+
+                        if (productValidation.isValid()) {
                             ContentValues values = new ContentValues();
                             values.put(ProductEntry.COLUMN_PRODUCT, productName);
                             values.put(ProductEntry.COLUMN_PRICE, price);
@@ -202,6 +202,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                                     , productName + "\n" + price + "\n" + qty + "\n" + supplierName + "\n" + supplierEmail
                                     , Toast.LENGTH_LONG).show();
                             dialog.dismiss();
+                        } else{
+                            Toast.makeText(getBaseContext(), productValidation.getToastMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -275,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return Pattern.matches(fpRegex, priceString);
     }
 
-    private AddProductValidation ValidateAddProduct(String productName, String price, String qty, String supplierName, String supplierEmail){
+    private ProductValidation validateAddProduct(String productName, String price, String qty, String supplierName, String supplierEmail){
         boolean isValid = true;
 //        String toastMessage = "Successfully added " + productName;
         String toastMessage = "";
@@ -285,6 +287,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (productName.length()==0){
             isValid = false;
             toastMessage += "Please enter a product name." + "\n";
+        }
+
+        //Validate price
+        if (!priceIsValid(price)){
+            isValid = false;
+            toastMessage += "Please enter a valid price." +"\n";
         }
 
         // Validate unique product name
@@ -297,13 +305,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //Validate supplier name existence
         if (supplierName.length()==0){
             isValid = false;
-            toastMessage += "Please enter a product name." + "\n";
+            toastMessage += "Please enter a supplier name." + "\n";
         }
 
         //Validate supplier email existence
         if (supplierEmail.length()==0){
             isValid = false;
-            toastMessage += "Please enter a product name." + "\n";
+            toastMessage += "Please enter a supplier email." + "\n";
         }
 
         // Validate Email
@@ -313,14 +321,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
 
-        return new AddProductValidation(isValid, toastMessage);
+        return new ProductValidation(isValid, toastMessage);
     }
 
-    private class AddProductValidation {
+    private class ProductValidation {
         private boolean isValid;
         private String toastMessage;
 
-        public AddProductValidation(boolean isValid, String toastMessage) {
+        public ProductValidation(boolean isValid, String toastMessage) {
             this.isValid = isValid;
             this.toastMessage = toastMessage;
         }
