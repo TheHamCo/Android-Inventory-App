@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
 
@@ -83,6 +85,21 @@ public class ProductAdapter extends CursorAdapter {
                 values.put(ProductEntry.COLUMN_QTY, --currQty);
 
                 context.getContentResolver().update(productIdUri,values,null,null);
+
+                String productName = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT));
+
+                // Display sale confirmation toast with custom, shorter duration
+                // SOURCE: http://stackoverflow.com/a/14503803/5302182
+                final Toast saleToast = Toast.makeText(context, "'" + productName + "' " + "sold!", Toast.LENGTH_SHORT);
+                saleToast.show();
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        saleToast.cancel();
+                    }
+                }, 550);
             }
         });
 
