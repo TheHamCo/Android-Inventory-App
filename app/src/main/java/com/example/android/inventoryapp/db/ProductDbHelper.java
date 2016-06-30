@@ -1,5 +1,6 @@
 package com.example.android.inventoryapp.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -34,6 +35,23 @@ public class ProductDbHelper extends SQLiteOpenHelper {
                 + ProductEntry.COLUMN_SUPPLIER_EMAIL + " TEXT NOT NULL "
                 + ");";
         db.execSQL(SQL_CREATE_HABITS_TABLE);
+
+        // Seed data
+        ContentValues values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT, "Ice Cream");
+        values.put(ProductEntry.COLUMN_PRICE, "2.00");
+        values.put(ProductEntry.COLUMN_QTY, "5");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Purity Ice Cream");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "purity@icecream.com");
+        db.insert(ProductEntry.TABLE_NAME, null, values);
+
+        values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT, "Coffee");
+        values.put(ProductEntry.COLUMN_PRICE, "1.00");
+        values.put(ProductEntry.COLUMN_QTY, "3");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Starbucks");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "starbucks@starbucks.com");
+        db.insert(ProductEntry.TABLE_NAME, null, values);
     }
 
     @Override
