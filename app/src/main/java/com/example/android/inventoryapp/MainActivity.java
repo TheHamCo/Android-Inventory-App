@@ -116,7 +116,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 final EditText supplierNameEditText = new EditText(this);
                 final EditText supplierEmailEditText = new EditText(this);
 
-
+                productNameEditText.setHint("Product Name");
+                priceEditText.setHint("Price");
+                qtyEditText.setHint("Quantity");
+                supplierNameEditText.setHint("Supplier Name");
+                supplierEmailEditText.setHint("Supplier Email");
 
                 LinearLayout layout = new LinearLayout(getApplicationContext());
                 layout.setOrientation(LinearLayout.VERTICAL);
