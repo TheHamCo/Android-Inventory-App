@@ -29,7 +29,7 @@ public class ProductAdapter extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, final Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, final Cursor cursor) {
         TextView idTextView = (TextView)view.findViewById(R.id._id);
         TextView productTextView = (TextView)view.findViewById(R.id.product_name);
         TextView priceTextView = (TextView)view.findViewById(R.id.price);
@@ -51,13 +51,12 @@ public class ProductAdapter extends CursorAdapter {
         qtyTextView.setText(Integer.toString(qty));
 
         //Button
-        Button saleButton = (Button)view.findViewById(R.id.sale_button);
-        saleButton.setTag(cursor);
+        final Button saleButton = (Button)view.findViewById(R.id.sale_button);
+        final int position = cursor.getPosition();
         saleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Cursor cursor = getCursor();
-                Cursor cursor = (Cursor)v.getTag();
+                cursor.moveToPosition(position);
                 int currQty = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_QTY));
 
                 int idIndex = cursor.getColumnIndex(ProductEntry._ID);
