@@ -292,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // Validate product name existence
         if (productName.length()==0){
             isValid = false;
-            toastMessage += "Please enter a product name." + "\n";
+            toastMessage += getString(R.string.please_enter_a_product_name) + "\n";
         }
         // Validate unique product name
         Cursor checkDuplicate = getContentResolver().query(
@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         );
         if (checkDuplicate.getCount() > 0){
             isValid = false;
-            toastMessage += "Product is already in inventory." + "\n";
+            toastMessage += getString(R.string.product_is_already_in_inventory) + "\n";
         }
         checkDuplicate.close();
 
@@ -311,29 +311,29 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // Validate decimal number format
         if (!priceIsValid(price)){
             isValid = false;
-            toastMessage += "Please enter a valid price." +"\n";
+            toastMessage += getString(R.string.please_enter_a_valid_price) +"\n";
         // No negative prices
         } else if (Double.parseDouble(price)<0){
             isValid = false;
-            toastMessage += "Please enter a valid price." + "\n";
+            toastMessage += getString(R.string.please_enter_a_valid_price) + "\n";
         }
 
         // Validate supplier name existence
         if (supplierName.length()==0){
             isValid = false;
-            toastMessage += "Please enter a supplier name." + "\n";
+            toastMessage += getString(R.string.please_enter_a_supplier_name) + "\n";
         }
 
         // Validate supplier email
         // Validate supplier email existence
         if (supplierEmail.length()==0){
             isValid = false;
-            toastMessage += "Please enter a supplier email." + "\n";
+            toastMessage += getString(R.string.please_enter_a_supplier_email) + "\n";
         }
         // Validate email proper format
         if (!Patterns.EMAIL_ADDRESS.matcher(supplierEmail).matches()){
             isValid = false;
-            toastMessage += "Please enter a valid email address."  + "\n";
+            toastMessage += getString(R.string.please_enter_a_valid_email_address)  + "\n";
         }
 
         return new ProductValidation(isValid, toastMessage);

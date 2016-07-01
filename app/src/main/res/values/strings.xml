@@ -25,5 +25,11 @@
     <string name="delete">Delete</string>
     <string name="confirm">Confirm</string>
     <string name="deleted">" deleted"</string>
+    <string name="please_enter_a_product_name">Please enter a product name.</string>
+    <string name="product_is_already_in_inventory">Product is already in inventory.</string>
+    <string name="please_enter_a_valid_price">Please enter a valid price.</string>
+    <string name="please_enter_a_supplier_name">Please enter a supplier name.</string>
+    <string name="please_enter_a_supplier_email">Please enter a supplier email.</string>
+    <string name="please_enter_a_valid_email_address">Please enter a valid email address.</string>
 
 </resources>
