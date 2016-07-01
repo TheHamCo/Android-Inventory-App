@@ -41,4 +41,12 @@ public class ProductDbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + ProductEntry.TABLE_NAME);
         onCreate(db);
     }
+
+    /**
+     * Delete the entire database
+     * @return true if the database was successfully deleted.
+     */
+    public boolean deleteDatabase(){
+        return context.deleteDatabase(DATABASE_NAME);
+    }
 }
