@@ -13,7 +13,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -184,7 +183,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                             values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, supplierEmail);
 
                             Uri addedProdUri = getContentResolver().insert(productUri, values);
-                            Log.d("Added Product", addedProdUri.toString());
                             Toast.makeText(
                                     getBaseContext()
                                     , "Successfully added " + "'" + productName + "'!"
