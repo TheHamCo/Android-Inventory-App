@@ -37,23 +37,19 @@ public class ProductAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, final Context context, final Cursor cursor) {
-        TextView idTextView = (TextView)view.findViewById(R.id._id);
         TextView productTextView = (TextView)view.findViewById(R.id.product_name);
         TextView priceTextView = (TextView)view.findViewById(R.id.price);
         TextView qtyTextView = (TextView)view.findViewById(R.id.qty);
 
-        int idIndex = cursor.getColumnIndex(ProductEntry._ID);
         int productIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT);
         int priceIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRICE);
         int qtyIndex = cursor.getColumnIndex(ProductEntry.COLUMN_QTY);
 
-        final long id = cursor.getLong(idIndex);
         String product = cursor.getString(productIndex);
         // Display price in format "xx.xx"
         Double price = cursor.getDouble(priceIndex);
         int qty = cursor.getInt(qtyIndex);
 
-        idTextView.setText(Long.toString(id));
         productTextView.setText(product);
         // Display price in format "[currency symbol]xx.xx"
         priceTextView.setText(currencySymbol + String.format("%.02f", price));
