@@ -11,6 +11,9 @@ import android.util.Log;
 
 /**
  * Provider for Product database
+ * Handles CRUD for
+ * 1. Product in general    (content://com.example.android.inventoryapp.app/product)
+ * 2. Product with ID       (content://com.example.android.inventoryapp.app/product/#)
  */
 public class ProductProvider extends ContentProvider{
 
@@ -20,9 +23,13 @@ public class ProductProvider extends ContentProvider{
     static final int PRODUCT = 101;
     static final int PRODUCT_WITH_ID = 102;
 
-    // _id=?
+    // "_id=?"
     public static final String sProductIdSelection = ProductContract.ProductEntry._ID + "=?";
 
+    /**
+     * Creates matcher for product without ID and product with ID
+     * @return an object that can match Product URIs
+     */
     static UriMatcher buildUriMatcher(){
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = ProductContract.CONTENT_AUTHORITY;
@@ -60,31 +67,32 @@ public class ProductProvider extends ContentProvider{
         switch (sUriMatcher.match(uri)){
             case PRODUCT:
                 retCursor = mOpenHelper.getReadableDatabase().query(
-                        ProductContract.ProductEntry.TABLE_NAME
-                        ,projection
-                        ,selection
-                        ,selectionArgs
-                        ,null
-                        ,null
-                        ,sortOrder
+                          ProductContract.ProductEntry.TABLE_NAME
+                        , projection
+                        , selection
+                        , selectionArgs
+                        , null
+                        , null
+                        , sortOrder
                 );
                 break;
             case PRODUCT_WITH_ID:
                 long _id = ProductContract.ProductEntry.getIdFromUri(uri);
 
                 retCursor = mOpenHelper.getReadableDatabase().query(
-                         ProductContract.ProductEntry.TABLE_NAME
-                        ,projection
-                        ,sProductIdSelection
-                        ,new String[]{ Long.toString(_id) }
-                        ,null
-                        ,null
-                        ,sortOrder
+                          ProductContract.ProductEntry.TABLE_NAME
+                        , projection
+                        , sProductIdSelection
+                        , new String[]{ Long.toString(_id) }
+                        , null
+                        , null
+                        , sortOrder
                 );
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+        // Notify change
         retCursor.setNotificationUri(getContext().getContentResolver(), uri);
         return retCursor;
     }
@@ -98,7 +106,7 @@ public class ProductProvider extends ContentProvider{
         switch(sUriMatcher.match(uri)) {
             case PRODUCT:
                 long _id = db.insert(ProductContract.ProductEntry.TABLE_NAME, null, values);
-                if (_id>0){
+                if (_id > 0){
                     returnUri = ProductContract.ProductEntry.buildLocationuri(_id);
                 } else {
                     throw new SQLException("Failed to insert row into " + uri);
@@ -107,6 +115,7 @@ public class ProductProvider extends ContentProvider{
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+        // Notify change
         getContext().getContentResolver().notifyChange(uri, null);
         return returnUri;
     }
@@ -121,22 +130,23 @@ public class ProductProvider extends ContentProvider{
         switch (match){
             case PRODUCT:
                 rowsDeleted = db.delete(
-                        ProductContract.ProductEntry.TABLE_NAME
-                        ,selection
-                        ,selectionArgs
+                          ProductContract.ProductEntry.TABLE_NAME
+                        , selection
+                        , selectionArgs
                 );
                 break;
             case PRODUCT_WITH_ID:
                 long _id = ProductContract.ProductEntry.getIdFromUri(uri);
                 rowsDeleted = db.delete(
-                        ProductContract.ProductEntry.TABLE_NAME
-                        ,sProductIdSelection
-                        ,new String[] {Long.toString(_id)}
+                          ProductContract.ProductEntry.TABLE_NAME
+                        , sProductIdSelection
+                        , new String[] {Long.toString(_id)}
                 );
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+        // Notify change
         if (rowsDeleted!=0){
             getContext().getContentResolver().notifyChange(uri, null);
         }
@@ -153,25 +163,26 @@ public class ProductProvider extends ContentProvider{
             case PRODUCT:
                 Log.d("debug", "not matching correctly aa");
                 rowsUpdated = db.update(
-                        ProductContract.ProductEntry.TABLE_NAME
-                        ,values
-                        ,selection
-                        ,selectionArgs
+                          ProductContract.ProductEntry.TABLE_NAME
+                        , values
+                        , selection
+                        , selectionArgs
                 );
                 break;
             case PRODUCT_WITH_ID:
                 long _id = ProductContract.ProductEntry.getIdFromUri(uri);
                 Log.d("update id", Long.toString(_id));
                 rowsUpdated = db.update(
-                        ProductContract.ProductEntry.TABLE_NAME
-                        ,values
-                        ,sProductIdSelection
-                        ,new String[] { Long.toString(_id) }
+                          ProductContract.ProductEntry.TABLE_NAME
+                        , values
+                        , sProductIdSelection
+                        , new String[] { Long.toString(_id) }
                 );
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+        // Notify change
         if (rowsUpdated != 0){
             getContext().getContentResolver().notifyChange(uri, null);
         }
