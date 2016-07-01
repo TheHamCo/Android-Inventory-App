@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,12 @@ import android.widget.Toast;
 
 import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
 
+/**
+ * TABLE OF CONTENTS:
+ * - INITIAL STUFF
+ * - BUTTON FOR TRACKING SALE
+ * - CLICKABLE AREA FOR ROUTING TO DETAIL ACTIVITY
+ */
 public class ProductAdapter extends CursorAdapter {
 
     // Get currency symbol from parent context
