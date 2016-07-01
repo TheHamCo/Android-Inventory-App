@@ -31,5 +31,6 @@
     <string name="please_enter_a_supplier_name">Please enter a supplier name.</string>
     <string name="please_enter_a_supplier_email">Please enter a supplier email.</string>
     <string name="please_enter_a_valid_email_address">Please enter a valid email address.</string>
+    <string name="add_product">Add Product</string>
 
 </resources>

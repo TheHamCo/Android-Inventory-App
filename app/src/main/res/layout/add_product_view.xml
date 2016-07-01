@@ -3,6 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--This currently is a template that isn't used-->
+    <!--TODO: Implement in Add Product AlertDialog-->
     <EditText
         android:id="@+id/product_name_new"
         android:hint="Product Name"
