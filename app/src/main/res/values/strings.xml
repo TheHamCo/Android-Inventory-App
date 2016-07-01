@@ -7,5 +7,6 @@
     <string name="order_more_button">Order more from supplier</string>
     <string name="reset_seed_data">RESET SEED DATA</string>
     <string name="qty">qty.</string>
+    <string name="from">from</string>
 
 </resources>
