@@ -18,7 +18,6 @@ import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -31,25 +30,41 @@ import java.util.Currency;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+
+/**
+ * TABLE OF CONTENTS:
+ * - STATE VARS
+ * - ONCREATE STUFF
+ *      - Init CursorLoader
+*       - Get locale currency
+ *      - Set button for seeding data
+ *      - Bind ListView
+ * - ADD PRODUCT STUFF
+ * - CURSOR LOADER STUFF
+ * - VALIDATION STUFF
+ * - SEED DATA STUFF
+ */
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private ProductAdapter productAdapter;
     ListView productList;
 
-    // /product
+    // "content://com.example.android.inventoryapp.app/product"
     final static Uri productUri = ProductEntry.CONTENT_URI;
 
-    private ProductAdapter productAdapter;
-
+    // Unique CursorLoader ID(s)
     public static final int LIST_LOADER = 0;
 
-    //locale for currency
+    // Locale for currency
     Locale localeSetting;
     //Currency symbol
     String currencySymbol;
 
+    /*ONCREATE STUFF*/
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-        getSupportLoaderManager().initLoader(0, null, this);
+        // Start CursorLoader here
+        getSupportLoaderManager().initLoader(LIST_LOADER, null, this);
         return super.onCreateView(parent, name, context, attrs);
     }
 
@@ -58,10 +73,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Use locale-specific currency symbol
+        // (TODO: Currency conversion?)
         // Source: http://stackoverflow.com/a/14389640/5302182
         localeSetting = getResources().getConfiguration().locale;
         Currency localCurrency = Currency.getInstance(localeSetting);
         currencySymbol = localCurrency.getSymbol(localeSetting);
+
+        // Button for resetting and seeding data
         Button seedButton = (Button)findViewById(R.id.reseed_button);
         if (seedButton != null) {
             seedButton.setOnClickListener(new View.OnClickListener() {
@@ -72,71 +91,42 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             });
         }
 
-        // Query all data
-//        Cursor products = getContentResolver().query(productUri, null, null, null, null);
-
         // ListView
         productList = (ListView) findViewById(R.id.product_list);
-//        SimpleCursorAdapter adapter = new SimpleCursorAdapter(
-//                this
-//                ,R.layout.product_card
-//                ,products
-//                ,new String[] { ProductEntry._ID, ProductEntry.COLUMN_PRODUCT, ProductEntry.COLUMN_PRICE, ProductEntry.COLUMN_QTY }
-//                ,new int[] { R.id._id, R.id.product_name, R.id.price, R.id.qty }
-//        );
         productAdapter = new ProductAdapter(this, null, currencySymbol);
         productList.setAdapter(productAdapter);
-
-        // Track sale
-        productList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Get the current qty
-                Cursor prodCursor = (Cursor)parent.getItemAtPosition(position);
-                int currQty = prodCursor.getInt(prodCursor.getColumnIndex(ProductEntry.COLUMN_QTY));
-                //URI of this entry
-                Uri productIdUri = ProductEntry.buildLocationuri(id);
-
-                Log.d("product id uri", productIdUri.toString());
-
-                //Update the qty
-                ContentValues values = new ContentValues();
-                values.put(ProductEntry.COLUMN_QTY, ++currQty);
-
-                getContentResolver().update(productIdUri,values,null,null);
-            }
-        });
-
-
     }
 
+    /*ADD PRODUCT STUFF*/
+    // Plus button in AppBar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.add_product, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
-    // Source: http://stackoverflow.com/a/18176909/5302182
-    //TODO: add hints
-    //TODO: try http://stackoverflow.com/questions/2335813/how-to-inflate-one-view-with-a-layout
-    //TODO: this might be useful http://stackoverflow.com/questions/5447092/get-context-inside-onclickdialoginterface-v-int-buttonid
-    //TODO: email validate Patterns.EMAIL_ADDRESS.matcher(<your Email EditText input String here>).matches()
+    // Add product AlertDialog is within
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.add_product:
-//                final View addView = getLayoutInflater().inflate(R.layout.add_product_view, null);
+
+                // Workarounds to get EditTexts in an AlertDialog
+                // Source: http://stackoverflow.com/a/18176909/5302182
+                //TODO: try http://stackoverflow.com/questions/2335813/how-to-inflate-one-view-with-a-layout
+                //TODO: this might be useful http://stackoverflow.com/questions/5447092/get-context-inside-onclickdialoginterface-v-int-buttonid
+
                 final EditText productNameEditText = new EditText(this);
                 final EditText priceEditText = new EditText(this);
                 final EditText qtyEditText = new EditText(this);
                 final EditText supplierNameEditText = new EditText(this);
                 final EditText supplierEmailEditText = new EditText(this);
 
-                productNameEditText.setHint("Product Name");
-                priceEditText.setHint("Price");
-                qtyEditText.setHint("Quantity");
-                supplierNameEditText.setHint("Supplier Name");
-                supplierEmailEditText.setHint("Supplier Email");
+                productNameEditText.setHint(R.string.product_name);
+                priceEditText.setHint(R.string.price);
+                qtyEditText.setHint(R.string.quantity);
+                supplierNameEditText.setHint(R.string.supplier_name);
+                supplierEmailEditText.setHint(R.string.supplier_email);
 
                 priceEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 qtyEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
@@ -151,9 +141,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 layout.addView(supplierEmailEditText);
 
                 final AlertDialog dialog = new AlertDialog.Builder(this)
-                        .setTitle("Add a new product")
+                        .setTitle(getString(R.string.add_a_new_product))
                         .setView(layout)
-                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(getString(R.string.add), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 // Do nothing here because we overwrite later,
@@ -161,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                                 // SOURCE: http://stackoverflow.com/a/15619098/5302182
                             }
                         })
-                        .setNegativeButton("Cancel", null)
+                        .setNegativeButton(getString(R.string.cancel), null)
                         .create();
                 dialog.show();
 
@@ -176,21 +166,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         String supplierName = supplierNameEditText.getText().toString();
                         String supplierEmail = supplierEmailEditText.getText().toString();
 
-//                        Number priceDouble = 0;
-//                        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
-//                        try {
-//                            priceDouble = currencyFormat.parse(price);
-//                        } catch (ParseException e) {
-//                            e.printStackTrace();
-//                        }
-                        Log.d("currency symbol", currencySymbol);
+                        // Remove currency symbols and commas from price
                         price = price.replaceAll("[" + currencySymbol + "]", "");
                         price = price.replaceAll("[,]", "");
 
-                        Log.d("Price Number", price);
-
+                        // Product Validation
                         ProductValidation productValidation = validateAddProduct(productName, price, qty, supplierName, supplierEmail);
 
+                        // Pass/fail
                         if (productValidation.isValid()) {
                             ContentValues values = new ContentValues();
                             values.put(ProductEntry.COLUMN_PRODUCT, productName);
@@ -217,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
+    /*CURSOR LOADER STUFF*/
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(
@@ -234,6 +218,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {}
 
+    /*VALIDATION STUFF*/
+    /**
+     * Validates if a price string is a properly-formatted decimal number
+     * @param priceString
+     * @return the string is a decimal number
+     */
     private boolean priceIsValid(String priceString){
 
         // Source: http://docs.oracle.com/javase/6/docs/api/java/lang/Double.html#valueOf%28java.lang.String%29
@@ -281,56 +271,78 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return Pattern.matches(fpRegex, priceString);
     }
 
+    /**
+     * Validates all inputs at once
+     * @param productName
+     * @param price
+     * @param qty
+     * @param supplierName
+     * @param supplierEmail
+     * @return ProductValidation with isValid and failure toast message
+     */
+    // TODO: separation of concerns
     private ProductValidation validateAddProduct(String productName, String price, String qty, String supplierName, String supplierEmail){
         boolean isValid = true;
-//        String toastMessage = "Successfully added " + productName;
+        // Start with line break to keep toast padding even on all sides
         String toastMessage = "\n";
 
-        //TODO: Refactor existence validation
-        //Validate product name existence
+        //TODO: Refactor existence validation to an else if with duplicate validation?
+        // Validate product name
+        // Validate product name existence
         if (productName.length()==0){
             isValid = false;
             toastMessage += "Please enter a product name." + "\n";
         }
+        // Validate unique product name
+        Cursor checkDuplicate = getContentResolver().query(
+                  productUri,null
+                , ProductEntry.COLUMN_PRODUCT + "=?"
+                , new String[] { productName }
+                , null
+        );
+        if (checkDuplicate.getCount() > 0){
+            isValid = false;
+            toastMessage += "Product is already in inventory." + "\n";
+        }
+        checkDuplicate.close();
 
-        //Validate price
+        // Validate price
+        // Validate decimal number format
         if (!priceIsValid(price)){
             isValid = false;
             toastMessage += "Please enter a valid price." +"\n";
+        // No negative prices
         } else if (Double.parseDouble(price)<0){
             isValid = false;
             toastMessage += "Please enter a valid price." + "\n";
         }
 
-        // Validate unique product name
-        Cursor checkDuplicate = getContentResolver().query(productUri,null, ProductEntry.COLUMN_PRODUCT + "=?", new String[] { productName }, null);
-        if (checkDuplicate.getCount() > 0){
-            isValid = false;
-            toastMessage += "Product is already in inventory." + "\n";
-        }
-
-        //Validate supplier name existence
+        // Validate supplier name existence
         if (supplierName.length()==0){
             isValid = false;
             toastMessage += "Please enter a supplier name." + "\n";
         }
 
-        //Validate supplier email existence
+        // Validate supplier email
+        // Validate supplier email existence
         if (supplierEmail.length()==0){
             isValid = false;
             toastMessage += "Please enter a supplier email." + "\n";
         }
-
-        // Validate Email
+        // Validate email proper format
         if (!Patterns.EMAIL_ADDRESS.matcher(supplierEmail).matches()){
             isValid = false;
             toastMessage += "Please enter a valid email address."  + "\n";
         }
 
-
         return new ProductValidation(isValid, toastMessage);
     }
 
+    /**
+     * Wrapper for all validation-related variables:
+     * Add product isValid
+     * Add product message
+     */
     // Source: http://stackoverflow.com/questions/457629/how-to-return-multiple-objects-from-a-java-method
     private class ProductValidation {
         private boolean isValid;
@@ -351,38 +363,58 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
 
+    /*SEED DATA STUFF*/
+    /**
+     * Add starting data to the database
+     */
     public void seedData(){
         // Clear DB
         getContentResolver().delete(productUri, null, null);
 
         // Seed data
         ContentValues values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT, "Pumpkin Spice Latte");
+        values.put(ProductEntry.COLUMN_PRICE, "3.99");
+        values.put(ProductEntry.COLUMN_QTY, "12");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Basic B Industries");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "bby@bbi.com");
+        getContentResolver().insert(productUri, values);
+
+        values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT, "Ice Cream");
         values.put(ProductEntry.COLUMN_PRICE, "2.00");
         values.put(ProductEntry.COLUMN_QTY, "5");
         values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Purity Ice Cream");
-        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "purity@icecream.com");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "purity@purityicecream.com");
         getContentResolver().insert(productUri, values);
 
         values = new ContentValues();
-        values.put(ProductEntry.COLUMN_PRODUCT, "Coffee");
-        values.put(ProductEntry.COLUMN_PRICE, "1.00");
-        values.put(ProductEntry.COLUMN_QTY, "3");
-        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Starbucks");
-        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "starbucks@starbucks.com");
+        values.put(ProductEntry.COLUMN_PRODUCT, "Nougat");
+        values.put(ProductEntry.COLUMN_PRICE, "7.00");
+        values.put(ProductEntry.COLUMN_QTY, "7");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Android");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "nutella@android.com");
+        getContentResolver().insert(productUri, values);
+
+        values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT, "Nutella");
+        values.put(ProductEntry.COLUMN_PRICE, "10.00");
+        values.put(ProductEntry.COLUMN_QTY, "10");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Wishful Thinking");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "nutella@android.com");
         getContentResolver().insert(productUri, values);
 
         values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT, "Tea");
-        values.put(ProductEntry.COLUMN_PRICE, "1.00");
+        values.put(ProductEntry.COLUMN_PRICE, "0.99");
         values.put(ProductEntry.COLUMN_QTY, "3");
-        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Starbucks");
-        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "starbucks@starbucks.com");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Dutch East India Company");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "1602@deic.com");
         getContentResolver().insert(productUri, values);
 
         values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT, "Espresso");
-        values.put(ProductEntry.COLUMN_PRICE, "1.00");
+        values.put(ProductEntry.COLUMN_PRICE, "3.00");
         values.put(ProductEntry.COLUMN_QTY, "3");
         values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Starbucks");
         values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "starbucks@starbucks.com");
@@ -390,7 +422,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT, "Latte");
-        values.put(ProductEntry.COLUMN_PRICE, "1.00");
+        values.put(ProductEntry.COLUMN_PRICE, "4.00");
         values.put(ProductEntry.COLUMN_QTY, "3");
         values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Starbucks");
         values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "starbucks@starbucks.com");
@@ -398,10 +430,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT, "Americano");
-        values.put(ProductEntry.COLUMN_PRICE, "1.00");
+        values.put(ProductEntry.COLUMN_PRICE, "3.50");
         values.put(ProductEntry.COLUMN_QTY, "3");
-        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Starbucks");
-        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "starbucks@starbucks.com");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Tim Hortons");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "canada@canada.ca");
         getContentResolver().insert(productUri, values);
     }
 }
