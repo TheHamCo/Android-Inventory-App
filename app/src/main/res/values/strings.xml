@@ -5,5 +5,6 @@
     <string name="sell_button">Sell</string>
     <string name="delete_product_button">Delete this product</string>
     <string name="order_more_button">Order more from supplier</string>
+    <string name="reset_seed_data">RESET SEED DATA</string>
 
 </resources>
