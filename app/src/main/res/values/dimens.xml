@@ -2,4 +2,15 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="detail_product_name">48dp</dimen>
+    <dimen name="from_right_margin">8dp</dimen>
+    <dimen name="supplier_name_margin_bottom">24dp</dimen>
+    <dimen name="price_qty_margin_bottom">24dp</dimen>
+    <dimen name="dec_inc_button_width">48dp</dimen>
+    <dimen name="detail_qty_horiz_margin">16dp</dimen>
+    <dimen name="list_product_name">24sp</dimen>
+    <dimen name="list_price_size">18sp</dimen>
+    <dimen name="list_qty_label">8dp</dimen>
+    <dimen name="list_qty">24sp</dimen>
+    <dimen name="list_height">75dp</dimen>
 </resources>
