@@ -18,15 +18,14 @@ import android.widget.Toast;
 
 import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
 
-/**
- * Created by mdd23 on 6/29/2016.
- */
 public class ProductAdapter extends CursorAdapter {
 
+    // Get currency symbol from parent context
     String currencySymbol;
 
     public ProductAdapter(Context context, Cursor c, String currencySymbol) {
         super(context, c, 0);
+        // Get currency symbol from parent context
         this.currencySymbol = currencySymbol;
     }
 
@@ -41,43 +40,49 @@ public class ProductAdapter extends CursorAdapter {
         TextView priceTextView = (TextView)view.findViewById(R.id.price);
         TextView qtyTextView = (TextView)view.findViewById(R.id.qty);
 
+
         int productIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT);
         int priceIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRICE);
         int qtyIndex = cursor.getColumnIndex(ProductEntry.COLUMN_QTY);
 
+
         String product = cursor.getString(productIndex);
-        // Display price in format "xx.xx"
+        // Cast for displaying price in format "xx.xx"
         Double price = cursor.getDouble(priceIndex);
         int qty = cursor.getInt(qtyIndex);
+
 
         productTextView.setText(product);
         // Display price in format "[currency symbol]xx.xx"
         priceTextView.setText(currencySymbol + String.format("%.02f", price));
         qtyTextView.setText(Integer.toString(qty));
 
-        //Button
-        //SOLUTION SOURCE: http://stackoverflow.com/a/22444284/5302182
+
+        // Button for tracking sale (qty--)
+        // SOLUTION SOURCE: http://stackoverflow.com/a/22444284/5302182
         final Button saleButton = (Button)view.findViewById(R.id.sale_button);
 
+        // Disable to prevent negative quantities
         if (qty == 0){
             saleButton.setEnabled(false);
         }else{
             saleButton.setEnabled(true);
         }
 
+        // Pass cursor data into the onClickListener to change quantity
         final int position = cursor.getPosition();
         saleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // cursor must look at the relevant row data
                 cursor.moveToPosition(position);
+
                 int currQty = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_QTY));
 
+                // Get URI to update
                 int idIndex = cursor.getColumnIndex(ProductEntry._ID);
                 int id = cursor.getInt(idIndex);
                 Uri productIdUri = ProductEntry.buildLocationuri(id);
-
-                Log.d("product id uri", productIdUri.toString());
-                Log.d("ID", Integer.toString(v.getId()));
 
                 //Update the qty
                 ContentValues values = new ContentValues();
@@ -85,10 +90,10 @@ public class ProductAdapter extends CursorAdapter {
 
                 context.getContentResolver().update(productIdUri,values,null,null);
 
-                String productName = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT));
 
                 // Display sale confirmation toast with custom, shorter duration
                 // SOURCE: http://stackoverflow.com/a/14503803/5302182
+                String productName = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT));
                 final Toast saleToast = Toast.makeText(context, "'" + productName + "' " + "sold!", Toast.LENGTH_SHORT);
                 saleToast.show();
 
@@ -102,31 +107,28 @@ public class ProductAdapter extends CursorAdapter {
             }
         });
 
-        //Detail
+
+        // Clickable Area for getting to DetailActivity
         final LinearLayout detailClickable = (LinearLayout)view.findViewById(R.id.detail_clickable);
         detailClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // cursor must look at the relevant row data
                 cursor.moveToPosition(position);
+
                 int currQty = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_QTY));
 
+                // Get URI to route to
                 int idIndex = cursor.getColumnIndex(ProductEntry._ID);
                 int id = cursor.getInt(idIndex);
                 Uri productIdUri = ProductEntry.buildLocationuri(id);
 
                 Intent detailIntent = new Intent(context, DetailActivity.class);
+                // Pass URI and currency through to intent
                 detailIntent.putExtra("detailUri", productIdUri.toString());
                 detailIntent.putExtra("currencySymbol", currencySymbol);
 
-                Log.d("product id uri", productIdUri.toString());
                 context.startActivity(detailIntent);
-//                Log.d("ID", "DETAIL!!" + Integer.toString(v.getId()));
-//
-//                //Update the qty
-//                ContentValues values = new ContentValues();
-//                values.put(ProductEntry.COLUMN_PRICE, ++currQty);
-//
-//                context.getContentResolver().update(productIdUri,values,null,null);
             }
         });
     }
