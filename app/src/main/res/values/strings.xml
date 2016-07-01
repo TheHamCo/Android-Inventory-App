@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Inventory App</string>
 
+    <!--TODO: Do the xliff interpolation thing-->
     <string name="content_authority">com.example.android.inventoryapp.app</string>
     <string name="sell_button">Sell</string>
     <string name="delete_product_button">Delete this product</string>

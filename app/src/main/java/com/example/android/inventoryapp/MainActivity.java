@@ -30,7 +30,7 @@ import java.util.Currency;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-
+// General TODO: decide between "qty" or "quantity" in documentation
 /**
  * TABLE OF CONTENTS:
  * - STATE VARS
@@ -46,6 +46,7 @@ import java.util.regex.Pattern;
  */
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    // Listing data
     private ProductAdapter productAdapter;
     ListView productList;
 
