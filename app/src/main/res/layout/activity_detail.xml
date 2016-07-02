@@ -13,6 +13,11 @@
         android:gravity="center_horizontal"
         tools:context="com.example.android.inventoryapp.DetailActivity">
 
+        <ImageView
+            android:id="@+id/product_image"
+            android:scaleType="centerCrop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/product_name"
             tools:text="Coffee beans"

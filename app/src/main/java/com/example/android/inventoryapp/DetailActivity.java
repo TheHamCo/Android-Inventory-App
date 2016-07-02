@@ -4,19 +4,26 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
+
+import java.io.InputStream;
 
 /**
  * TABLE OF CONTENTS
@@ -180,6 +187,12 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         if (data.moveToFirst()) {
             // Get data in order they appear in the view
 
+            // Image
+            int imageIndex = data.getColumnIndex(ProductEntry.COLUMN_IMAGE_URL);
+            ImageView productImageView = (ImageView)findViewById(R.id.product_image);
+            String imageUrl = data.getString(imageIndex);
+            new DownloadImageTask(productImageView).execute(imageUrl);
+
             // Product Name
             int productIndex = data.getColumnIndex(ProductEntry.COLUMN_PRODUCT);
             TextView productNameTextView = (TextView) findViewById(R.id.product_name);
@@ -228,4 +241,31 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {}
+
+    /*ASYNC IMAGE DOWNLOADER*/
+    // Source: http://stackoverflow.com/a/10868126/5302182
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
 }
