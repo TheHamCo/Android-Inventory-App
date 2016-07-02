@@ -43,6 +43,9 @@ public class ProductContract {
         // Email address of the supplier
         public static final String COLUMN_SUPPLIER_EMAIL = "supplier_email";
 
+        // URL of image
+        public static final String COLUMN_IMAGE_URL = "image_url";
+
         /**
          * Builds URI with ID routing
          * @param id

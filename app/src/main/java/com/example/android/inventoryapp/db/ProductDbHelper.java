@@ -11,7 +11,11 @@ import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
  */
 public class ProductDbHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
+    /*CHANGELOG
+     * - v2 image URL added
+     * - ...
+     */
     public static final String DATABASE_NAME = "products.db";
     // Save the context to use with deleteDatabase()
     Context context;
@@ -25,13 +29,14 @@ public class ProductDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         final String SQL_CREATE_HABITS_TABLE = "CREATE TABLE " + ProductEntry.TABLE_NAME + "("
-                + ProductEntry._ID + " INTEGER PRIMARY KEY, "
-                + ProductEntry.COLUMN_PRODUCT + " TEXT UNIQUE NOT NULL, "
-                + ProductEntry.COLUMN_PRICE + " REAL NOT NULL , "
+                + ProductEntry._ID + " INTEGER PRIMARY KEY" + " , "
+                + ProductEntry.COLUMN_PRODUCT + " TEXT UNIQUE NOT NULL" + " , "
+                + ProductEntry.COLUMN_PRICE + " REAL NOT NULL" + " , "
                 // Qty starts at 0
-                + ProductEntry.COLUMN_QTY + " INTEGER DEFAULT 0 , "
-                + ProductEntry.COLUMN_SUPPLIER_NAME + " TEXT NOT NULL, "
-                + ProductEntry.COLUMN_SUPPLIER_EMAIL + " TEXT NOT NULL "
+                + ProductEntry.COLUMN_QTY + " INTEGER DEFAULT 0" + " , "
+                + ProductEntry.COLUMN_SUPPLIER_NAME + " TEXT NOT NULL" + " , "
+                + ProductEntry.COLUMN_SUPPLIER_EMAIL + " TEXT NOT NULL" + " , "
+                + ProductEntry.COLUMN_IMAGE_URL + " TEXT "
                 + ");";
         db.execSQL(SQL_CREATE_HABITS_TABLE);
     }

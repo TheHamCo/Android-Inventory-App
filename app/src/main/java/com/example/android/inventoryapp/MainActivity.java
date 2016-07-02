@@ -121,16 +121,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 final EditText qtyEditText = new EditText(this);
                 final EditText supplierNameEditText = new EditText(this);
                 final EditText supplierEmailEditText = new EditText(this);
+                final EditText imageUrlEditText = new EditText(this);
 
                 productNameEditText.setHint(R.string.product_name);
                 priceEditText.setHint(R.string.price);
                 qtyEditText.setHint(R.string.quantity);
                 supplierNameEditText.setHint(R.string.supplier_name);
                 supplierEmailEditText.setHint(R.string.supplier_email);
+                imageUrlEditText.setHint(R.string.image_url);
 
                 priceEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 qtyEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
                 supplierEmailEditText.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                imageUrlEditText.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
 
                 LinearLayout layout = new LinearLayout(getApplicationContext());
                 layout.setOrientation(LinearLayout.VERTICAL);
@@ -139,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 layout.addView(qtyEditText);
                 layout.addView(supplierNameEditText);
                 layout.addView(supplierEmailEditText);
+                layout.addView(imageUrlEditText);
 
                 final AlertDialog dialog = new AlertDialog.Builder(this)
                         .setTitle(getString(R.string.add_a_new_product))
@@ -165,13 +169,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         String qty = qtyEditText.getText().toString();
                         String supplierName = supplierNameEditText.getText().toString();
                         String supplierEmail = supplierEmailEditText.getText().toString();
+                        String imageUrl = imageUrlEditText.getText().toString();
 
                         // Remove currency symbols and commas from price
                         price = price.replaceAll("[" + currencySymbol + "]", "");
                         price = price.replaceAll("[,]", "");
 
                         // Product Validation
-                        ProductValidation productValidation = validateAddProduct(productName, price, qty, supplierName, supplierEmail);
+                        ProductValidation productValidation = validateAddProduct(productName, price, qty, supplierName, supplierEmail, imageUrl);
 
                         // Pass/fail
                         if (productValidation.isValid()) {
@@ -181,6 +186,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                             values.put(ProductEntry.COLUMN_QTY, qty);
                             values.put(ProductEntry.COLUMN_SUPPLIER_NAME, supplierName);
                             values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, supplierEmail);
+                            values.put(ProductEntry.COLUMN_IMAGE_URL, imageUrl);
 
                             Toast.makeText(
                                     getBaseContext()
@@ -276,10 +282,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      * @param qty
      * @param supplierName
      * @param supplierEmail
+     * @param imageUrl
      * @return ProductValidation with isValid and failure toast message
      */
     // TODO: separation of concerns
-    private ProductValidation validateAddProduct(String productName, String price, String qty, String supplierName, String supplierEmail){
+    private ProductValidation validateAddProduct(String productName, String price, String qty, String supplierName, String supplierEmail, String imageUrl){
         boolean isValid = true;
         // Start with line break to keep toast padding even on all sides
         String toastMessage = "\n";
@@ -331,6 +338,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (!Patterns.EMAIL_ADDRESS.matcher(supplierEmail).matches()){
             isValid = false;
             toastMessage += getString(R.string.please_enter_a_valid_email_address)  + "\n";
+        }
+
+        // Validate image URL
+        if (!Patterns.WEB_URL.matcher(imageUrl).matches()){
+            isValid = false;
+            toastMessage += getString(R.string.please_enter_a_valid_image_url) + "\n";
         }
 
         return new ProductValidation(isValid, toastMessage);
