@@ -351,8 +351,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // Validate image URL
         // SOURCE: http://stackoverflow.com/q/15726665/5302182
         // Matches URL + image extension
+        // ALSO, image is optional
         Pattern imageUrlRegex = Pattern.compile("(http(s?):/)(/[^/]+)+" + ".(?:jpg|gif|png)");
-        if (!imageUrlRegex.matcher(imageUrl).matches()){
+        if (imageUrl.length() != 0 && !imageUrlRegex.matcher(imageUrl).matches()){
             isValid = false;
             toastMessage += getString(R.string.please_enter_a_valid_image_url) + "\n";
         }

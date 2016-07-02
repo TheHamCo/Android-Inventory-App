@@ -191,6 +191,35 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             int imageIndex = data.getColumnIndex(ProductEntry.COLUMN_IMAGE_URL);
             ImageView productImageView = (ImageView)findViewById(R.id.product_image);
             String imageUrl = data.getString(imageIndex);
+            // DEFAULT PICTURE
+            /*
+                                       #@@/,          *(  //
+                         ,   (#     @@@@@@@@@@@@@@.   %%,     .
+                       / .(    . /@@@@@@@@@@@@@@@@@@@*&    ..   (
+                        #   .& % @@@@@@@@@@@@@@@@@@@@@@% .       /
+                      .   ,    &@@@@@@@@@@@@@@@@@@@@@@@@@
+                   . *  *    @@@@@@@@@@@@@@@@@@@@@@@@@/ (/.     . (
+                    /      @@@@@@@@&&@@@@@@@@@@@@@@@@@@#          .#
+                   . .    %@.    @%   @@@@@@@@@@@@@@@@@@@@@(        (
+                (       ,     @@@@ ,      ,@@@@@@@@ @@@@@@@@ /
+               *            @@@@,    @@% .       #  &@ @@@@@  (
+              .           @@@@@    ,    , /(  / *. .% . @@@@ .
+             *          %@@@@@.   /  ,(&@,. , . ./@@@* .#@@&   ,         (
+            *          ,@@@@@@         /(  *    ,       (@@                *
+                         @@@@@           /       (      (@%      ,
+        .                ,%* #             #    ,       (           .
+    //#.            ,     @  #           /, @  ./ .     /%           (           /(*.
+   # ..                    /              .       .     ..            *           ,  *
+  %   /                    *@%@          *  *##,       .               ,   .,/(##*
+/    .                      @@.           /,                                            *
+       (,    ,                 /             .*           (     (       #
+            (             ., #  #            ##.            %.      #((
+            ((,**  .%                              #                     %
+            #                        (.##.       (   %/    *       ,
+            #                 #       *            .    # ,         .     (
+                                #     #.    . (#(   %
+           ,                       (. (                              /
+                                       *           /       ,                             */
             if (imageUrl.length() == 0 ){
                 imageUrl = "http://i.imgur.com/1m8T3Ue.png";
             }
