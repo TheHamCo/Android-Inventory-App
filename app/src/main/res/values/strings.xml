@@ -34,5 +34,6 @@
     <string name="add_product">Add Product</string>
     <string name="image_url">Image URL</string>
     <string name="please_enter_a_valid_image_url">Please enter a valid image URL</string>
+    <string name="no_products_found_please_use_the_dialog_in_the_top_right_corner">No products found!\nPlease use the dialog in the top right corner.</string>
 
 </resources>

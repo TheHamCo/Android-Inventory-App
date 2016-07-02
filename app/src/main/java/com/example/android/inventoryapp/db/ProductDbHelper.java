@@ -11,9 +11,9 @@ import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
  */
 public class ProductDbHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
     /*CHANGELOG
-     * - v2 image URL added
+     * - v2+3 image URL added
      * - ...
      */
     public static final String DATABASE_NAME = "products.db";

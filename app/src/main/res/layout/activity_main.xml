@@ -11,6 +11,14 @@
         android:text="@string/reset_seed_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/no_products_found"
+        android:text="@string/no_products_found_please_use_the_dialog_in_the_top_right_corner"
+        android:textSize="@dimen/no_products_found_text_size"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <ListView
         android:id="@+id/product_list"
         android:layout_width="match_parent"
