@@ -82,6 +82,7 @@
             android:id="@+id/delete_product_button"
             android:text="@string/delete_product_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/detail_view_margin_bottom"/>
     </LinearLayout>
 </ScrollView>
