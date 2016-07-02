@@ -182,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                             values.put(ProductEntry.COLUMN_SUPPLIER_NAME, supplierName);
                             values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, supplierEmail);
 
-                            Uri addedProdUri = getContentResolver().insert(productUri, values);
                             Toast.makeText(
                                     getBaseContext()
                                     , "Successfully added " + "'" + productName + "'!"

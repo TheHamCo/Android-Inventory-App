@@ -121,8 +121,6 @@ public class ProductAdapter extends CursorAdapter {
                 // cursor must look at the relevant row data
                 cursor.moveToPosition(position);
 
-                int currQty = cursor.getInt(cursor.getColumnIndex(ProductEntry.COLUMN_QTY));
-
                 // Get URI to route to
                 int idIndex = cursor.getColumnIndex(ProductEntry._ID);
                 int id = cursor.getInt(idIndex);
