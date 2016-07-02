@@ -45,6 +45,7 @@ import java.io.InputStream;
  *      - Make quantity global
  *      - Make supplier email global
  *      - Disable decrease button
+ * - ASYNC IMAGE DOWNLOADER
  */
 // Used to extend Activity instead of AppCompatActivity to support AlertDialog
 // SOURCE: http://stackoverflow.com/a/21815015/5302182
