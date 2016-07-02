@@ -13,7 +13,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -226,7 +225,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             noProductsFoundTextView.setVisibility(TextView.GONE);
             productAdapter.swapCursor(products);
         }
-        Log.d("Entries", products.getCount() + "");
     }
 
     @Override
@@ -351,7 +349,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
         // Validate image URL
-        if (!Patterns.WEB_URL.matcher(imageUrl).matches()){
+        Pattern imageUrlRegex = Pattern.compile("(http(s?):/)(/[^/]+)+" + ".(?:jpg|gif|png)");
+        if (!imageUrlRegex.matcher(imageUrl).matches()){
             isValid = false;
             toastMessage += getString(R.string.please_enter_a_valid_image_url) + "\n";
         }
@@ -392,69 +391,69 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // Clear DB
         getContentResolver().delete(productUri, null, null);
 
-//        // Seed data
-//        ContentValues values = new ContentValues();
-//        values.put(ProductEntry.COLUMN_PRODUCT, "Pumpkin Spice Latte");
-//        values.put(ProductEntry.COLUMN_PRICE, "3.99");
-//        values.put(ProductEntry.COLUMN_QTY, "12");
-//        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Basic B Industries");
-//        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "bby@bbi.com");
-//        getContentResolver().insert(productUri, values);
-//
-//        values = new ContentValues();
-//        values.put(ProductEntry.COLUMN_PRODUCT, "Ice Cream");
-//        values.put(ProductEntry.COLUMN_PRICE, "2.00");
-//        values.put(ProductEntry.COLUMN_QTY, "5");
-//        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Purity Ice Cream");
-//        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "purity@purityicecream.com");
-//        getContentResolver().insert(productUri, values);
-//
-//        values = new ContentValues();
-//        values.put(ProductEntry.COLUMN_PRODUCT, "Nougat");
-//        values.put(ProductEntry.COLUMN_PRICE, "7.00");
-//        values.put(ProductEntry.COLUMN_QTY, "7");
-//        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Android");
-//        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "nutella@android.com");
-//        getContentResolver().insert(productUri, values);
-//
-//        values = new ContentValues();
-//        values.put(ProductEntry.COLUMN_PRODUCT, "Nutella");
-//        values.put(ProductEntry.COLUMN_PRICE, "10.00");
-//        values.put(ProductEntry.COLUMN_QTY, "10");
-//        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Wishful Thinking");
-//        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "nutella@android.com");
-//        getContentResolver().insert(productUri, values);
-//
-//        values = new ContentValues();
-//        values.put(ProductEntry.COLUMN_PRODUCT, "Tea");
-//        values.put(ProductEntry.COLUMN_PRICE, "0.99");
-//        values.put(ProductEntry.COLUMN_QTY, "3");
-//        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Dutch East India Company");
-//        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "1602@deic.com");
-//        getContentResolver().insert(productUri, values);
-//
-//        values = new ContentValues();
-//        values.put(ProductEntry.COLUMN_PRODUCT, "Espresso");
-//        values.put(ProductEntry.COLUMN_PRICE, "3.00");
-//        values.put(ProductEntry.COLUMN_QTY, "3");
-//        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Starbucks");
-//        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "starbucks@starbucks.com");
-//        getContentResolver().insert(productUri, values);
-//
-//        values = new ContentValues();
-//        values.put(ProductEntry.COLUMN_PRODUCT, "Latte");
-//        values.put(ProductEntry.COLUMN_PRICE, "4.00");
-//        values.put(ProductEntry.COLUMN_QTY, "3");
-//        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Starbucks");
-//        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "starbucks@starbucks.com");
-//        getContentResolver().insert(productUri, values);
-//
-//        values = new ContentValues();
-//        values.put(ProductEntry.COLUMN_PRODUCT, "Americano");
-//        values.put(ProductEntry.COLUMN_PRICE, "3.50");
-//        values.put(ProductEntry.COLUMN_QTY, "3");
-//        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Tim Hortons");
-//        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "canada@canada.ca");
-//        getContentResolver().insert(productUri, values);
+        // Seed data
+        ContentValues values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT, "Pumpkin Spice Latte");
+        values.put(ProductEntry.COLUMN_PRICE, "3.99");
+        values.put(ProductEntry.COLUMN_QTY, "12");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Basic B Industries");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "bby@bbi.com");
+        getContentResolver().insert(productUri, values);
+
+        values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT, "Ice Cream");
+        values.put(ProductEntry.COLUMN_PRICE, "2.00");
+        values.put(ProductEntry.COLUMN_QTY, "5");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Purity Ice Cream");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "purity@purityicecream.com");
+        getContentResolver().insert(productUri, values);
+
+        values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT, "Nougat");
+        values.put(ProductEntry.COLUMN_PRICE, "7.00");
+        values.put(ProductEntry.COLUMN_QTY, "7");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Android");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "nutella@android.com");
+        getContentResolver().insert(productUri, values);
+
+        values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT, "Nutella");
+        values.put(ProductEntry.COLUMN_PRICE, "10.00");
+        values.put(ProductEntry.COLUMN_QTY, "10");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Wishful Thinking");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "nutella@android.com");
+        getContentResolver().insert(productUri, values);
+
+        values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT, "Tea");
+        values.put(ProductEntry.COLUMN_PRICE, "0.99");
+        values.put(ProductEntry.COLUMN_QTY, "3");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Dutch East India Company");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "1602@deic.com");
+        getContentResolver().insert(productUri, values);
+
+        values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT, "Espresso");
+        values.put(ProductEntry.COLUMN_PRICE, "3.00");
+        values.put(ProductEntry.COLUMN_QTY, "3");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Starbucks");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "starbucks@starbucks.com");
+        getContentResolver().insert(productUri, values);
+
+        values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT, "Latte");
+        values.put(ProductEntry.COLUMN_PRICE, "4.00");
+        values.put(ProductEntry.COLUMN_QTY, "3");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Starbucks");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "starbucks@starbucks.com");
+        getContentResolver().insert(productUri, values);
+
+        values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT, "Americano");
+        values.put(ProductEntry.COLUMN_PRICE, "3.50");
+        values.put(ProductEntry.COLUMN_QTY, "3");
+        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Tim Hortons");
+        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "canada@canada.ca");
+        getContentResolver().insert(productUri, values);
     }
 }
