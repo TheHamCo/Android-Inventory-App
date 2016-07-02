@@ -349,6 +349,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
         // Validate image URL
+        // SOURCE: http://stackoverflow.com/q/15726665/5302182
+        // Matches URL + image extension
         Pattern imageUrlRegex = Pattern.compile("(http(s?):/)(/[^/]+)+" + ".(?:jpg|gif|png)");
         if (!imageUrlRegex.matcher(imageUrl).matches()){
             isValid = false;
