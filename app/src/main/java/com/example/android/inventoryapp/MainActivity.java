@@ -136,18 +136,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 supplierEmailEditText.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                 imageUrlEditText.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
 
-                LinearLayout layout = new LinearLayout(getApplicationContext());
-                layout.setOrientation(LinearLayout.VERTICAL);
-                layout.addView(productNameEditText);
-                layout.addView(priceEditText);
-                layout.addView(qtyEditText);
-                layout.addView(supplierNameEditText);
-                layout.addView(supplierEmailEditText);
-                layout.addView(imageUrlEditText);
+                LinearLayout addProductLayout = new LinearLayout(getApplicationContext());
+                addProductLayout.setOrientation(LinearLayout.VERTICAL);
+                addProductLayout.addView(productNameEditText);
+                addProductLayout.addView(priceEditText);
+                addProductLayout.addView(qtyEditText);
+                addProductLayout.addView(supplierNameEditText);
+                addProductLayout.addView(supplierEmailEditText);
+                addProductLayout.addView(imageUrlEditText);
 
                 final AlertDialog dialog = new AlertDialog.Builder(this)
                         .setTitle(getString(R.string.add_a_new_product))
-                        .setView(layout)
+                        .setView(addProductLayout)
                         .setPositiveButton(getString(R.string.add), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -396,22 +396,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         // Seed data
         ContentValues values = new ContentValues();
-        values.put(ProductEntry.COLUMN_PRODUCT, "Pumpkin Spice Latte");
-        values.put(ProductEntry.COLUMN_PRICE, "3.99");
-        values.put(ProductEntry.COLUMN_QTY, "12");
-        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Basic B Industries");
-        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "bby@bbi.com");
-        values.put(ProductEntry.COLUMN_IMAGE_URL, "http://i.imgur.com/7eRhiSN.jpg");
-        getContentResolver().insert(productUri, values);
-
-        values = new ContentValues();
-        values.put(ProductEntry.COLUMN_PRODUCT, "Ice Cream");
-        values.put(ProductEntry.COLUMN_PRICE, "2.00");
-        values.put(ProductEntry.COLUMN_QTY, "5");
-        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Ben and Jerry's\n(feat. Lieutenant Dan)");
-        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "lieutenantdan@benandjerrys.com");
-        values.put(ProductEntry.COLUMN_IMAGE_URL, "http://i.imgur.com/Yt4j461.jpg");
-        getContentResolver().insert(productUri, values);
 
         values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT, "Nougat");
