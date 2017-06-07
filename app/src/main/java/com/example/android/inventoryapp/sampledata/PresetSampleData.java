@@ -11,7 +11,7 @@ import java.util.List;
  */
 
 public class PresetSampleData {
-    private static SampleData presetData;
+    private static SampleData presetData = new SampleData();
 
     public static SampleData getPresetData() {
         List<HashMap<String, String>> presetDataList = new ArrayList<>();

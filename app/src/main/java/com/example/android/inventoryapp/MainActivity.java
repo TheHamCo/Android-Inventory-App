@@ -25,9 +25,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
+import com.example.android.inventoryapp.sampledata.PresetSampleData;
+import com.example.android.inventoryapp.sampledata.SampleDataContract;
 
 import java.util.Currency;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 // General TODO: decide between "qty" or "quantity" in documentation
@@ -87,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             seedButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    seedData();
+                    seedData(PresetSampleData.getPresetData());
                 }
             });
         }
@@ -390,65 +394,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     /**
      * Add starting data to the database
      */
-    public void seedData(){
+    public void seedData(SampleDataContract sampleData){
         // Clear DB
         getContentResolver().delete(productUri, null, null);
 
         // Seed data
         ContentValues values = new ContentValues();
 
-        values = new ContentValues();
-        values.put(ProductEntry.COLUMN_PRODUCT, "Nougat");
-        values.put(ProductEntry.COLUMN_PRICE, "7.00");
-        values.put(ProductEntry.COLUMN_QTY, "7");
-        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Android");
-        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "nutella@android.com");
-        values.put(ProductEntry.COLUMN_IMAGE_URL, "http://cdn03.androidauthority.net/wp-content/uploads/2016/03/android-n-preview-logo.jpg");
-        getContentResolver().insert(productUri, values);
-
-        values = new ContentValues();
-        values.put(ProductEntry.COLUMN_PRODUCT, "Nutella");
-        values.put(ProductEntry.COLUMN_PRICE, "10.00");
-        values.put(ProductEntry.COLUMN_QTY, "10");
-        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Wishful Thinking");
-        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "nutella@android.com");
-        values.put(ProductEntry.COLUMN_IMAGE_URL, "http://www.nutella.com/nutella-gl-theme/images/custom/Nutella.png");
-        getContentResolver().insert(productUri, values);
-
-        values = new ContentValues();
-        values.put(ProductEntry.COLUMN_PRODUCT, "Tea");
-        values.put(ProductEntry.COLUMN_PRICE, "0.99");
-        values.put(ProductEntry.COLUMN_QTY, "3");
-        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Dutch East India Company");
-        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "1602@deic.com");
-        values.put(ProductEntry.COLUMN_IMAGE_URL, "http://www.asiawelcome.com/Images/Spices/VOC_Holland_SpicesFleet_mw.jpg");
-        getContentResolver().insert(productUri, values);
-
-        values = new ContentValues();
-        values.put(ProductEntry.COLUMN_PRODUCT, "Espresso");
-        values.put(ProductEntry.COLUMN_PRICE, "3.00");
-        values.put(ProductEntry.COLUMN_QTY, "3");
-        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Starbucks");
-        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "starbucks@starbucks.com");
-        values.put(ProductEntry.COLUMN_IMAGE_URL, "http://i.imgur.com/x48dEvw.jpg");
-        getContentResolver().insert(productUri, values);
-
-        values = new ContentValues();
-        values.put(ProductEntry.COLUMN_PRODUCT, "Latte");
-        values.put(ProductEntry.COLUMN_PRICE, "4.00");
-        values.put(ProductEntry.COLUMN_QTY, "3");
-        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Starbucks");
-        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "starbucks@starbucks.com");
-        values.put(ProductEntry.COLUMN_IMAGE_URL, "http://i.imgur.com/YWInHSO.jpg");
-        getContentResolver().insert(productUri, values);
-
-        values = new ContentValues();
-        values.put(ProductEntry.COLUMN_PRODUCT, "Americano");
-        values.put(ProductEntry.COLUMN_PRICE, "3.50");
-        values.put(ProductEntry.COLUMN_QTY, "3");
-        values.put(ProductEntry.COLUMN_SUPPLIER_NAME, "Tim Hortons");
-        values.put(ProductEntry.COLUMN_SUPPLIER_EMAIL, "canada@canada.ca");
-        values.put(ProductEntry.COLUMN_IMAGE_URL, "http://www.themoscowtimes.com/upload/iblock/12e/1280px-A_small_cup_of_coffee.JPG");
-        getContentResolver().insert(productUri, values);
+        for (HashMap<String, String> item : sampleData.getSampleData()) {
+            values = new ContentValues();
+            for (Map.Entry<String,String> column : item.entrySet()) {
+                values.put(column.getKey(), column.getValue());
+            }
+            getContentResolver().insert(productUri, values);
+        }
     }
 }
