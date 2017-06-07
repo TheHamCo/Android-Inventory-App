@@ -375,16 +375,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         private boolean isValid;
         private String toastMessage;
 
-        public ProductValidation(boolean isValid, String toastMessage) {
+        ProductValidation(boolean isValid, String toastMessage) {
             this.isValid = isValid;
             this.toastMessage = toastMessage;
         }
 
-        public boolean isValid() {
+        private boolean isValid() {
             return isValid;
         }
 
-        public String getToastMessage() {
+        private String getToastMessage() {
             return toastMessage;
         }
     }
