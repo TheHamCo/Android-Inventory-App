@@ -399,8 +399,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         getContentResolver().delete(productUri, null, null);
 
         // Seed data
-        ContentValues values = new ContentValues();
-
+        ContentValues values;
         for (HashMap<String, String> item : sampleData.getSampleData()) {
             values = new ContentValues();
             for (Map.Entry<String,String> column : item.entrySet()) {
