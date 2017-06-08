@@ -26,10 +26,10 @@ import android.widget.Toast;
 
 import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
 import com.example.android.inventoryapp.sampledata.PresetSampleData;
-import com.example.android.inventoryapp.sampledata.SampleDataContract;
 
 import java.util.Currency;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -394,13 +394,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     /**
      * Add starting data to the database
      */
-    public void seedData(SampleDataContract sampleData){
+    public void seedData(List<HashMap<String, String>> sampleData){
         // Clear DB
         getContentResolver().delete(productUri, null, null);
 
         // Seed data
         ContentValues values;
-        for (HashMap<String, String> item : sampleData.getSampleData()) {
+        for (HashMap<String, String> item : sampleData) {
             values = new ContentValues();
             for (Map.Entry<String,String> column : item.entrySet()) {
                 values.put(column.getKey(), column.getValue());
