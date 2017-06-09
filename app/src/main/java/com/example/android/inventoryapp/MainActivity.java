@@ -59,8 +59,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
         // Start CursorLoader here
-        getSupportLoaderManager().initLoader(LIST_LOADER, null, this);
+        startCursorLoader();
         return super.onCreateView(parent, name, context, attrs);
+    }
+
+    private void startCursorLoader() {
+        getSupportLoaderManager().initLoader(LIST_LOADER, null, this);
     }
 
     @Override
@@ -68,13 +72,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Use locale-specific currency symbol
-        // (TODO: Currency conversion?)
-        // Source: http://stackoverflow.com/a/14389640/5302182
-        localeSetting = getResources().getConfiguration().locale;
-        Currency localCurrency = Currency.getInstance(localeSetting);
-        currencySymbol = localCurrency.getSymbol(localeSetting);
+        findLocaleSpecificCurrencySymbol();
+        setButtonForResettingSampleData();
+        populateItemListView();
+    }
 
+    private void populateItemListView() {
+        // ListView
+        productList = (ListView) findViewById(R.id.product_list);
+        productAdapter = new ProductAdapter(this, null, currencySymbol);
+        productList.setAdapter(productAdapter);
+    }
+
+    private void setButtonForResettingSampleData() {
         // Button for resetting and seeding data
         Button seedButton = (Button)findViewById(R.id.reseed_button);
         if (seedButton != null) {
@@ -85,11 +95,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
             });
         }
+    }
 
-        // ListView
-        productList = (ListView) findViewById(R.id.product_list);
-        productAdapter = new ProductAdapter(this, null, currencySymbol);
-        productList.setAdapter(productAdapter);
+    private void findLocaleSpecificCurrencySymbol() {
+        // Use locale-specific currency symbol
+        // (TODO: Currency conversion?)
+        // Source: http://stackoverflow.com/a/14389640/5302182
+        localeSetting = getResources().getConfiguration().locale;
+        Currency localCurrency = Currency.getInstance(localeSetting);
+        currencySymbol = localCurrency.getSymbol(localeSetting);
     }
 
     /*ADD PRODUCT STUFF*/
@@ -116,16 +130,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(
-                this
-                ,productUri
-                ,null, null ,null, null
+                  this
+                , productUri
+                , null, null ,null, null
         );
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor products) {
         TextView noProductsFoundTextView = (TextView)findViewById(R.id.no_products_found);
-        if (products.getCount() == 0 ) {
+        if (products.getCount() == 0) {
             noProductsFoundTextView.setVisibility(TextView.VISIBLE);
         } else {
             noProductsFoundTextView.setVisibility(TextView.GONE);
@@ -141,17 +155,26 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      * Add starting data to the database
      */
     public void seedData(List<HashMap<String, String>> sampleData){
-        // Clear DB
-        getContentResolver().delete(productUri, null, null);
+        deleteAllDatabaseEntries();
+        addSampleDataToDatabase(sampleData);
+    }
 
-        // Seed data
-        ContentValues values;
+    private void addSampleDataToDatabase(List<HashMap<String, String>> sampleData) {
         for (HashMap<String, String> item : sampleData) {
-            values = new ContentValues();
-            for (Map.Entry<String,String> column : item.entrySet()) {
-                values.put(column.getKey(), column.getValue());
-            }
-            getContentResolver().insert(productUri, values);
+            addColumnsToDatabase(item);
         }
+    }
+
+    private void addColumnsToDatabase(HashMap<String, String> item) {
+        ContentValues values;
+        values = new ContentValues();
+        for (Map.Entry<String,String> column : item.entrySet()) {
+            values.put(column.getKey(), column.getValue());
+        }
+        getContentResolver().insert(productUri, values);
+    }
+
+    private void deleteAllDatabaseEntries() {
+        getContentResolver().delete(productUri, null, null);
     }
 }
