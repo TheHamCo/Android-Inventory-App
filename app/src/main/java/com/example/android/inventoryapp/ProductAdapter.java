@@ -42,9 +42,9 @@ public class ProductAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, final Context context, final Cursor cursor) {
-        TextView productTextView = (TextView)view.findViewById(R.id.product_name);
-        TextView priceTextView = (TextView)view.findViewById(R.id.price);
-        TextView qtyTextView = (TextView)view.findViewById(R.id.qty);
+        TextView productTextView = (TextView) view.findViewById(R.id.product_name);
+        TextView priceTextView = (TextView) view.findViewById(R.id.price);
+        TextView qtyTextView = (TextView) view.findViewById(R.id.qty);
 
 
         int productIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT);
@@ -52,13 +52,13 @@ public class ProductAdapter extends CursorAdapter {
         int qtyIndex = cursor.getColumnIndex(ProductEntry.COLUMN_QTY);
 
 
-        String product = cursor.getString(productIndex);
+        String productName = cursor.getString(productIndex);
         // Cast for displaying price in format "xx.xx"
         Double price = cursor.getDouble(priceIndex);
         int qty = cursor.getInt(qtyIndex);
 
 
-        productTextView.setText(product);
+        productTextView.setText(productName);
         // Display price in format "[currency symbol]xx.xx"
         priceTextView.setText(currencySymbol + String.format("%.02f", price));
         qtyTextView.setText(Integer.toString(qty));
@@ -66,12 +66,12 @@ public class ProductAdapter extends CursorAdapter {
 
         // Button for tracking sale (qty--)
         // SOLUTION SOURCE: http://stackoverflow.com/a/22444284/5302182
-        final Button saleButton = (Button)view.findViewById(R.id.sale_button);
+        final Button saleButton = (Button) view.findViewById(R.id.sale_button);
 
         // Disable to prevent negative quantities
-        if (qty == 0){
+        if (qty == 0) {
             saleButton.setEnabled(false);
-        }else{
+        } else {
             saleButton.setEnabled(true);
         }
 
@@ -94,11 +94,11 @@ public class ProductAdapter extends CursorAdapter {
                 ContentValues values = new ContentValues();
                 values.put(ProductEntry.COLUMN_QTY, --currQty);
 
-                context.getContentResolver().update(productIdUri,values,null,null);
+                context.getContentResolver().update(productIdUri, values, null, null);
 
 
                 // Prevent sale confirmation toasts from overlapping
-                if (saleToast != null){
+                if (saleToast != null) {
                     saleToast.cancel();
                 }
 
@@ -110,7 +110,7 @@ public class ProductAdapter extends CursorAdapter {
 
 
         // Clickable Area for getting to DetailActivity
-        final LinearLayout detailClickable = (LinearLayout)view.findViewById(R.id.detail_clickable);
+        final LinearLayout detailClickable = (LinearLayout) view.findViewById(R.id.detail_clickable);
         detailClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
