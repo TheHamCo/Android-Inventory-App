@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,9 @@ import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
 public class ProductAdapter extends CursorAdapter {
 
     // Get currency symbol from parent context
-    String currencySymbol;
+    private String currencySymbol;
+
+    private Toast saleToast;
 
     public ProductAdapter(Context context, Cursor c, String currencySymbol) {
         super(context, c, 0);
@@ -96,19 +97,14 @@ public class ProductAdapter extends CursorAdapter {
                 context.getContentResolver().update(productIdUri,values,null,null);
 
 
-                // Display sale confirmation toast with custom, shorter duration
-                // SOURCE: http://stackoverflow.com/a/14503803/5302182
-                String productName = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT));
-                final Toast saleToast = Toast.makeText(context, "'" + productName + "' " + "sold!", Toast.LENGTH_SHORT);
-                saleToast.show();
+                // Prevent sale confirmation toasts from overlapping
+                if (saleToast != null){
+                    saleToast.cancel();
+                }
 
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        saleToast.cancel();
-                    }
-                }, 550);
+                String productName = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT));
+                saleToast = Toast.makeText(context, "'" + productName + "' " + "sold!", Toast.LENGTH_SHORT);
+                saleToast.show();
             }
         });
 
