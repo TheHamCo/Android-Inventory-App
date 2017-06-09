@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     /*ONCREATE STUFF*/
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-        // Start CursorLoader here
         startCursorLoader();
         return super.onCreateView(parent, name, context, attrs);
     }
@@ -74,10 +73,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         findLocaleSpecificCurrencySymbol();
         setButtonForResettingSampleData();
-        populateItemListView();
+        populateProductListView();
     }
 
-    private void populateItemListView() {
+    private void populateProductListView() {
         // ListView
         productList = (ListView) findViewById(R.id.product_list);
         productAdapter = new ProductAdapter(this, null, currencySymbol);
@@ -116,13 +115,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     // Add product AlertDialog is within
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()){
             case R.id.add_product:
                 new AddProductDialog(this).showAddProductDialog(currencySymbol);
                 return true;
             default:
-                return super.onOptionsItemSelected(item);
+                return super.onOptionsItemSelected(menuItem);
         }
     }
 
@@ -160,8 +159,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void addSampleDataToDatabase(List<HashMap<String, String>> sampleData) {
-        for (HashMap<String, String> item : sampleData) {
-            addColumnsToDatabase(item);
+        for (HashMap<String, String> product : sampleData) {
+            addColumnsToDatabase(product);
         }
     }
 

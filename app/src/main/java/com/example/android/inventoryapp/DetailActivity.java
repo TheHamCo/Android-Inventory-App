@@ -4,17 +4,13 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -22,8 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.inventoryapp.db.ProductContract.ProductEntry;
-
-import java.io.InputStream;
 
 /**
  * TABLE OF CONTENTS
@@ -60,18 +54,20 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     Uri productIdUri;
 
     // Product info
-    // TODO: Why is price not on here?
-    String productName;
-    String supplierName;
-    String currencySymbol;
-    int currQty;
-    String supplierEmail;
+    private String productName;
+    private String supplierName;
+    private String currencySymbol;
+    private Double price;
+    private int currQty;
+    private String supplierEmail;
 
     // Make decreaseQtyButton available globally to disable in CursorLoader onLoadFinished
     Button decreaseQtyButton;
 
     // Unique CursorLoader ID
     public static final int DETAIL_LOADER = 0;
+
+    private static final String DEFAULT_PICTURE_URL = "http://i.imgur.com/k3A1aSj.jpg";
 
 
     /*ON CREATE STUFF*/
@@ -80,43 +76,41 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        // Get intent data
-        Intent detailIntent = getIntent();
-        currencySymbol = detailIntent.getStringExtra("currencySymbol");
-        productIdUri = Uri.parse(detailIntent.getStringExtra("detailUri"));
+        getIntentData();
+        startCursorLoader();
+        setDecreaseQuantityButton();
+        setIncreaseQuantityButton();
+        setDeleteProductButton();
+        setOrderMoreButton();
+    }
 
-        // Initialize CursorLoader
-        getSupportLoaderManager().initLoader(DETAIL_LOADER, null, this);
-
-        // Decrease Quantity Button
-        decreaseQtyButton = (Button)findViewById(R.id.decrease_button);
-        if (decreaseQtyButton != null) {
-            decreaseQtyButton.setOnClickListener(new View.OnClickListener() {
+    private void setOrderMoreButton() {
+        Button orderMoreButton = (Button)findViewById(R.id.order_more_button);
+        if (orderMoreButton != null) {
+            orderMoreButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ContentValues values = new ContentValues();
-                    values.put(ProductEntry.COLUMN_QTY, --currQty);
-
-                    getContentResolver().update(productIdUri,values,null,null);
+                    sendUserToEmailApp();
                 }
             });
         }
+    }
 
-        // Increase Quantity Button
-        Button increaseQtyButton = (Button)findViewById(R.id.increase_button);
-        if (increaseQtyButton != null) {
-            increaseQtyButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ContentValues values = new ContentValues();
-                    values.put(ProductEntry.COLUMN_QTY, ++currQty);
-
-                    getContentResolver().update(productIdUri,values,null,null);
-                }
-            });
+    private void sendUserToEmailApp() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"))
+                .putExtra(Intent.EXTRA_EMAIL, new String[] {supplierEmail})
+                .putExtra(Intent.EXTRA_SUBJECT, getString(R.string.order_request_for) + productName +"'")
+                .putExtra(Intent.EXTRA_TEXT
+                        , getString(R.string.dear) + supplierName
+                                + getString(R.string.we_would_like_to_order_more_of_your_product) + productName
+                                + getString(R.string.regards));
+        if (intent.resolveActivity(getPackageManager()) != null){
+            startActivity(intent);
         }
+    }
 
-        // Delete Product Button
+    private void setDeleteProductButton() {
         Button deleteProductButton = (Button)findViewById(R.id.delete_product_button);
         if (deleteProductButton != null) {
             deleteProductButton.setOnClickListener(new View.OnClickListener() {
@@ -131,13 +125,17 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                                 public void onClick(DialogInterface dialog, int which) {
                                     // TODO: Delete product error handling
                                     getContentResolver().delete(productIdUri, null, null);
+                                    displaySuccessMessage();
+                                    takeUserBackHome();
+                                }
 
-                                    // Display success message
-                                    Toast.makeText(getBaseContext(), productName +getString(R.string.deleted), Toast.LENGTH_SHORT).show();
-
-                                    // Reroute back home
+                                private void takeUserBackHome() {
                                     Intent intent = new Intent(DetailActivity.this, MainActivity.class);
                                     startActivity(intent);
+                                }
+
+                                private void displaySuccessMessage() {
+                                    Toast.makeText(getBaseContext(), productName + getString(R.string.deleted), Toast.LENGTH_SHORT).show();
                                 }
                             })
                             .setNegativeButton(R.string.cancel, null)
@@ -146,29 +144,44 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                 }
             });
         }
+    }
 
-        // Order More Button
-        // Formats an email to the supplier
-        // Sends user to email app
-        Button orderMoreButton = (Button)findViewById(R.id.order_more_button);
-        if (orderMoreButton != null) {
-            orderMoreButton.setOnClickListener(new View.OnClickListener() {
+    private void setIncreaseQuantityButton() {
+        Button increaseQtyButton = (Button)findViewById(R.id.increase_button);
+        if (increaseQtyButton != null) {
+            increaseQtyButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_SENDTO);
-                    intent.setData(Uri.parse("mailto:"))
-                            .putExtra(Intent.EXTRA_EMAIL, new String[] {supplierEmail})
-                            .putExtra(Intent.EXTRA_SUBJECT, getString(R.string.order_request_for) + productName +"'")
-                            .putExtra(Intent.EXTRA_TEXT
-                                    , getString(R.string.dear) + supplierName
-                                            + getString(R.string.we_would_like_to_order_more_of_your_product) + productName
-                                            + getString(R.string.regards));
-                    if (intent.resolveActivity(getPackageManager()) != null){
-                        startActivity(intent);
-                    }
+                    ContentValues values = new ContentValues();
+                    values.put(ProductEntry.COLUMN_QTY, ++currQty);
+                    getContentResolver().update(productIdUri,values,null,null);
                 }
             });
         }
+    }
+
+    private void setDecreaseQuantityButton() {
+        decreaseQtyButton = (Button)findViewById(R.id.decrease_button);
+        if (decreaseQtyButton != null) {
+            decreaseQtyButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ContentValues values = new ContentValues();
+                    values.put(ProductEntry.COLUMN_QTY, --currQty);
+                    getContentResolver().update(productIdUri,values,null,null);
+                }
+            });
+        }
+    }
+
+    private void startCursorLoader() {
+        getSupportLoaderManager().initLoader(DETAIL_LOADER, null, this);
+    }
+
+    private void getIntentData() {
+        Intent detailIntent = getIntent();
+        currencySymbol = detailIntent.getStringExtra("currencySymbol");
+        productIdUri = Uri.parse(detailIntent.getStringExtra("detailUri"));
     }
 
     /*CURSORLOADER STUFF*/
@@ -184,121 +197,99 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-        // Init cursor (required to prevent error)
-        if (data.moveToFirst()) {
+        boolean isCursorInitializedToPreventError = data.moveToFirst();
+        if (isCursorInitializedToPreventError) {
             // Get data in order they appear in the view
+            displayProductImage(data);
 
-            // Image
-            int imageIndex = data.getColumnIndex(ProductEntry.COLUMN_IMAGE_URL);
-            ImageView productImageView = (ImageView)findViewById(R.id.product_image);
-            String imageUrl = data.getString(imageIndex);
-            // DEFAULT PICTURE
-            /*
-                                       #@@/,          *(  //
-                         ,   (#     @@@@@@@@@@@@@@.   %%,     .
-                       / .(    . /@@@@@@@@@@@@@@@@@@@*&    ..   (
-                        #   .& % @@@@@@@@@@@@@@@@@@@@@@% .       /
-                      .   ,    &@@@@@@@@@@@@@@@@@@@@@@@@@
-                   . *  *    @@@@@@@@@@@@@@@@@@@@@@@@@/ (/.     . (
-                    /      @@@@@@@@&&@@@@@@@@@@@@@@@@@@#          .#
-                   . .    %@.    @%   @@@@@@@@@@@@@@@@@@@@@(        (
-                (       ,     @@@@ ,      ,@@@@@@@@ @@@@@@@@ /
-               *            @@@@,    @@% .       #  &@ @@@@@  (
-              .           @@@@@    ,    , /(  / *. .% . @@@@ .
-             *          %@@@@@.   /  ,(&@,. , . ./@@@* .#@@&   ,         (
-            *          ,@@@@@@         /(  *    ,       (@@                *
-                         @@@@@           /       (      (@%      ,
-        .                ,%* #             #    ,       (           .
-    //#.            ,     @  #           /, @  ./ .     /%           (           /(*.
-   # ..                    /              .       .     ..            *           ,  *
-  %   /                    *@%@          *  *##,       .               ,   .,/(##*
-/    .                      @@.           /,                                            *
-       (,    ,                 /             .*           (     (       #
-            (             ., #  #            ##.            %.      #((
-            ((,**  .%                              #                     %
-            #                        (.##.       (   %/    *       ,
-            #                 #       *            .    # ,         .     (
-                                #     #.    . (#(   %
-           ,                       (. (                              /
-                                       *           /       ,                             */
-            if (imageUrl.length() == 0 ){
-                imageUrl = "http://i.imgur.com/1m8T3Ue.png";
-            }
-            new DownloadImageTask(productImageView).execute(imageUrl);
+            setProductName(data);
+            displayProductName(data);
 
-            // Product Name
-            int productIndex = data.getColumnIndex(ProductEntry.COLUMN_PRODUCT);
-            TextView productNameTextView = (TextView) findViewById(R.id.product_name);
-            productName = data.getString(productIndex);
-            if (productNameTextView != null) {
-                productNameTextView.setText(productName);
-            }
+            setSupplierName(data);
+            displaySupplierName(data);
 
-            // Supplier Name
-            int supplierIndex = data.getColumnIndex(ProductEntry.COLUMN_SUPPLIER_NAME);
-            TextView supplierTextView = (TextView) findViewById(R.id.supplier_name);
-            supplierName = data.getString(supplierIndex);
-            if (supplierTextView != null) {
-                supplierTextView.setText(supplierName);
-            }
+            setPrice(data);
+            displayPrice(data);
 
-            // Price
-            int priceIndex = data.getColumnIndex(ProductEntry.COLUMN_PRICE);
-            TextView priceTextView = (TextView) findViewById(R.id.price);
-            // Display price in format "[currrency symbol]xx.xx"
-            Double price = data.getDouble(priceIndex);
-            if (priceTextView != null) {
-                priceTextView.setText(currencySymbol + String.format("%.02f", price));
-            }
+            setCurrentQuantity(data);
+            displayQuantity(data);
 
-            // Quantity
-            // Make QTY global for adding / subtracting in buttons
-            currQty = data.getInt(data.getColumnIndex(ProductEntry.COLUMN_QTY));
-            TextView qtyTextView = (TextView)findViewById(R.id.qty);
-            if (qtyTextView != null) {
-                qtyTextView.setText(Integer.toString(currQty));
-            }
+            setSupplierEmail(data);
 
-            // Supplier Email
-            // Make global for "order more" button
-            supplierEmail = data.getString(data.getColumnIndex(ProductEntry.COLUMN_SUPPLIER_EMAIL));
+            preventUserCausingNegativeQuantities();
+        }
+    }
 
-            // Disable decrease button to prevent negative quantity
-            if (currQty == 0){
-                decreaseQtyButton.setEnabled(false);
-            }else{
-                decreaseQtyButton.setEnabled(true);
-            }
+    private void displayDataInTextView(Cursor data, int textViewId, String textToDisplay) {
+        TextView supplierTextView = (TextView) findViewById(textViewId);
+        if (supplierTextView != null) {
+            supplierTextView.setText(textToDisplay);
+        }
+    }
+
+    private void setProductName(Cursor data){
+        int productIndex = data.getColumnIndex(ProductEntry.COLUMN_PRODUCT);
+        productName = data.getString(productIndex);
+    }
+
+    private void setSupplierName(Cursor data){
+        int supplierIndex = data.getColumnIndex(ProductEntry.COLUMN_SUPPLIER_NAME);
+        supplierName = data.getString(supplierIndex);
+    }
+
+    private void setPrice(Cursor data) {
+        int priceIndex = data.getColumnIndex(ProductEntry.COLUMN_PRICE);
+        price = data.getDouble(priceIndex);
+    }
+
+    private void setCurrentQuantity(Cursor data) {
+        // Make QTY global for adding / subtracting in buttons
+        int qtyIndex = data.getColumnIndex(ProductEntry.COLUMN_QTY);
+        currQty = data.getInt(qtyIndex);
+    }
+
+    private void setSupplierEmail(Cursor data) {
+        // Make global for "order more" button
+        supplierEmail = data.getString(data.getColumnIndex(ProductEntry.COLUMN_SUPPLIER_EMAIL));
+    }
+
+    private void displayProductImage(Cursor data) {
+        int imageIndex = data.getColumnIndex(ProductEntry.COLUMN_IMAGE_URL);
+        ImageView productImageView = (ImageView)findViewById(R.id.product_image);
+        String imageUrl = data.getString(imageIndex);
+        // DEFAULT PICTURE
+        if (imageUrl.length() == 0 ){
+            imageUrl = DEFAULT_PICTURE_URL;
+        }
+        new DownloadImageTask(productImageView).execute(imageUrl);
+    }
+
+    private void displayProductName(Cursor data) {
+        displayDataInTextView(data, R.id.product_name, productName);
+    }
+
+    private void displaySupplierName(Cursor data){
+        displayDataInTextView(data, R.id.supplier_name, supplierName);
+    }
+
+    private void displayPrice(Cursor data) {
+        // Display price in format "[currrency symbol]xx.xx"
+        String formattedPrice = currencySymbol + String.format("%.02f", price);
+        displayDataInTextView(data, R.id.price, formattedPrice);
+    }
+
+    private void displayQuantity(Cursor data) {
+        displayDataInTextView(data, R.id.qty, String.valueOf(currQty));
+    }
+
+    private void preventUserCausingNegativeQuantities() {
+        if (currQty == 0){
+            decreaseQtyButton.setEnabled(false);
+        }else{
+            decreaseQtyButton.setEnabled(true);
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {}
-
-    /*ASYNC IMAGE DOWNLOADER*/
-    // Source: http://stackoverflow.com/a/10868126/5302182
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
-    }
 }
